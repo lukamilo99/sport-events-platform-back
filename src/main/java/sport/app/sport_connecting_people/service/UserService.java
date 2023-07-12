@@ -18,13 +18,17 @@ import java.util.Optional;
 public class UserService {
 
     private UserRepository userRepository;
+    private PrincipalService principalService;
     private UserMapper userMapper;
 
     public User update(UserUpdateDto dto) {
-        Long userId = SecurityUtil.getCurrentUserPrincipal().getId();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        User user = principalService.getCurrentUser();
         userRepository.save(userMapper.updateUser(user, dto));
         return user;
+    }
+
+    public void delete() {
+        Long userId = principalService.getCurrentUserId();
+        userRepository.deleteById(userId);
     }
 }

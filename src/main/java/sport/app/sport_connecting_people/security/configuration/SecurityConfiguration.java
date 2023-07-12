@@ -35,22 +35,22 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         try {
             http
-                            .cors()
-                        .and()
-                            .csrf()
-                                .disable()
-                            .sessionManagement()
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                        .and()
-                            .authorizeHttpRequests()
-                                .anyRequest()
-                                    .permitAll()
-                        .and()
-                            .oauth2Login()
-                                .successHandler(oAuth2AuthenticationSuccessHandler)
-                                .failureHandler(oAuth2AuthenticationFailureHandler)
-                            .userInfoEndpoint()
-                                .userService(customOAuth2UserService);
+                    .cors()
+                    .and()
+                    .csrf()
+                    .disable()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeHttpRequests()
+                    .anyRequest()
+                    .permitAll()
+                    .and()
+                    .oauth2Login()
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureHandler(oAuth2AuthenticationFailureHandler)
+                    .userInfoEndpoint()
+                    .userService(customOAuth2UserService);
             http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
             return http.build();

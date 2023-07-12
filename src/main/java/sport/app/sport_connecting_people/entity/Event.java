@@ -62,4 +62,12 @@ public class Event {
         this.eventCreator = eventCreator;
         this.participants.add(eventCreator);
     }
+
+    public void addParticipant(User user) {
+        this.participants.add(user);
+    }
+
+    public void removeParticipant(User user) {
+        this.participants.remove(user);
+    }
 }

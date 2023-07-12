@@ -12,11 +12,7 @@ import java.util.Optional;
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     Optional<Event> findById(Long id);
-
     Optional<List<Event>> findByLocation(String location);
-
     Optional<List<Event>> findByDate(Date date);
-
     Optional<List<Event>> findBySport(String sport);
-
 }

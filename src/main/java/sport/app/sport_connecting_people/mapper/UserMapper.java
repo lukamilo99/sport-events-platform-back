@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import sport.app.sport_connecting_people.dto.user.UserRegistrationDto;
+import sport.app.sport_connecting_people.dto.user.UserResponseDto;
 import sport.app.sport_connecting_people.dto.user.UserUpdateDto;
 import sport.app.sport_connecting_people.entity.User;
 
@@ -26,5 +27,12 @@ public class UserMapper {
         user.setLastname(dto.getLastname());
         user.setEmail(dto.getEmail());
         return user;
+    }
+
+    public UserResponseDto createUserResponseDto(User user) {
+        UserResponseDto dto = new UserResponseDto();
+        dto.setId(user.getId());
+        dto.setName(user.getFirstname() + " " + user.getLastname());
+        return dto;
     }
 }

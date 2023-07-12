@@ -17,7 +17,13 @@ public class UserController {
     private UserService userService;
 
     @PutMapping("/update")
-    public ResponseEntity<User> createEvent(@Valid @RequestBody UserUpdateDto dto) {
+    public ResponseEntity<User> update(@Valid @RequestBody UserUpdateDto dto) {
         return new ResponseEntity<>(userService.update(dto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> delete() {
+        userService.delete();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
