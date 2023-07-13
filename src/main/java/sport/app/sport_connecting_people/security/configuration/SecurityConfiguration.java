@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,20 +36,17 @@ public class SecurityConfiguration {
             http
                     .cors()
                     .and()
-                    .csrf()
-                    .disable()
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeHttpRequests()
-                    .anyRequest()
-                    .permitAll()
+                    .requestMatchers("/auth/**").permitAll()
+                    .anyRequest().authenticated()
                     .and()
                     .oauth2Login()
                     .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler)
-                    .userInfoEndpoint()
-                    .userService(customOAuth2UserService);
+                    .userInfoEndpoint().userService(customOAuth2UserService);
             http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
             return http.build();

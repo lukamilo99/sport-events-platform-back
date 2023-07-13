@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import sport.app.sport_connecting_people.dto.event.EventCreationDto;
 import sport.app.sport_connecting_people.dto.event.EventResponseDto;
+import sport.app.sport_connecting_people.dto.event.EventUpdateDto;
 import sport.app.sport_connecting_people.entity.Event;
 
 @AllArgsConstructor
@@ -17,6 +18,15 @@ public class EventMapper {
         event.setLocation(dto.getLocation());
         event.setSport(dto.getSport());
         event.setDate(dto.getDate());
+        return event;
+    }
+
+    public Event updateEvent(Event event, EventUpdateDto dto) {
+        event.setCapacity(dto.getCapacity());
+        event.setName(dto.getName());
+        event.setSport(dto.getSport());
+        event.setDate(dto.getDate());
+        event.setLocation(dto.getLocation());
         return event;
     }
 
