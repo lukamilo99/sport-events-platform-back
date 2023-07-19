@@ -4,9 +4,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class UserRegistrationDto {
 
     @NotBlank
@@ -16,7 +18,7 @@ public class UserRegistrationDto {
     @NotBlank
     private String password;
     @NotBlank
-    private String repeatedPassword;
+    private String confirmPassword;
     @Email
     private String email;
 }

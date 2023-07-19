@@ -12,41 +12,51 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import sport.app.sport_connecting_people.security.filter.JwtAuthenticationFilter;
 import sport.app.sport_connecting_people.security.handler.OAuth2AuthenticationFailureHandler;
 import sport.app.sport_connecting_people.security.handler.OAuth2AuthenticationSuccessHandler;
-import sport.app.sport_connecting_people.security.jwt.JwtUtil;
+import sport.app.sport_connecting_people.security.repository.OAuth2AuthorizationRequestRepository;
+import sport.app.sport_connecting_people.security.util.JwtUtil;
 import sport.app.sport_connecting_people.security.service.CustomOAuth2UserService;
 import sport.app.sport_connecting_people.security.service.CustomUserDetailsService;
 
 @AllArgsConstructor
 @EnableWebSecurity
 @Configuration
-public class SecurityConfiguration {
+public class SecurityConfig {
 
     private JwtUtil jwtUtil;
     private CustomUserDetailsService userDetailsService;
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private OAuth2AuthorizationRequestRepository oAuth2authorizationRequestRepository;
     private CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         try {
             http
-                    .cors()
-                    .and()
+                    .cors().and()
                     .csrf().disable()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
+                    .httpBasic().disable()
+                    .formLogin().disable()
                     .authorizeHttpRequests()
-                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/auth/**", "/oauth2/**").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .oauth2Login()
+                    .authorizationEndpoint().baseUri("/oauth2/authorize")
+                    .authorizationRequestRepository(oAuth2authorizationRequestRepository)
+                    .and()
+                    .redirectionEndpoint().baseUri("/oauth2/callback/*")
+                    .and()
+                    .userInfoEndpoint().userService(customOAuth2UserService)
+                    .and()
                     .successHandler(oAuth2AuthenticationSuccessHandler)
-                    .failureHandler(oAuth2AuthenticationFailureHandler)
-                    .userInfoEndpoint().userService(customOAuth2UserService);
+                    .failureHandler(oAuth2AuthenticationFailureHandler);
             http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
             return http.build();

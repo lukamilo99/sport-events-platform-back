@@ -1,4 +1,4 @@
-package sport.app.sport_connecting_people.security.jwt;
+package sport.app.sport_connecting_people.security.util;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
