@@ -32,21 +32,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request){
+        return request.getRequestURI().contains("/auth/login") || request.getRequestURI().contains("/auth/register");
+    }
+
     private String getToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("jwt")) {
-                    return cookie.getValue();
-                }
-            }
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
         }
         return null;
     }
 
     private UserDetails getUserDetails(String token) {
         Long userId = jwtUtil.getUserId(token);
-        System.out.println(userId);
         return userDetailsService.loadUserById(userId);
     }
 

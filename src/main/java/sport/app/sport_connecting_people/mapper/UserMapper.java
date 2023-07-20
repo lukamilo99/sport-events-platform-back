@@ -40,10 +40,11 @@ public class UserMapper {
 
     public UserProfileDto createUserProfile(UserPrincipal userPrincipal) {
         UserProfileDto dto = new UserProfileDto();
-        dto.setId(userPrincipal.getId());
         dto.setEmail(userPrincipal.getEmail());
         dto.setFirstname(userPrincipal.getFirstname());
         dto.setLastname(userPrincipal.getLastname());
+        dto.setRole(userPrincipal.getAuthorities().toArray()[0].toString());
+        dto.setOAuth(userPrincipal.isOAuth());
         return dto;
     }
 }

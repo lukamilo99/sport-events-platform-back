@@ -30,17 +30,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
         String jwt = jwtUtil.generateToken(user.getId());
-        response.addCookie(cookieUtil.getHttpOnlyCookie(jwt));
-        getRedirectStrategy().sendRedirect(request, response, obtainRedirectUri(request));
+        getRedirectStrategy().sendRedirect(request, response, obtainRedirectUri(request, jwt));
     }
 
-    private String obtainRedirectUri(HttpServletRequest request) {
+    private String obtainRedirectUri(HttpServletRequest request, String jwt) {
         String redirectUri = "";
         Optional<Cookie> optionalCookie = cookieUtil.obtainCookie("redirect_uri", request.getCookies());
         if (optionalCookie.isPresent()) {
             redirectUri = optionalCookie.get().getValue();
         }
-        return UriComponentsBuilder.fromUriString(redirectUri).build().toUriString();
+        return UriComponentsBuilder.fromUriString(redirectUri).queryParam("jwt", jwt).build().toUriString();
     }
 
     private void clearAuthenticationAttributes(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {

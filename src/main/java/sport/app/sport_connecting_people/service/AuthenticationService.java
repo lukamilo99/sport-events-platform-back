@@ -15,7 +15,6 @@ import sport.app.sport_connecting_people.entity.User;
 import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.RoleRepository;
 import sport.app.sport_connecting_people.repository.UserRepository;
-import sport.app.sport_connecting_people.security.util.CookieUtil;
 import sport.app.sport_connecting_people.security.util.JwtUtil;
 import sport.app.sport_connecting_people.security.model.UserPrincipal;
 
@@ -25,7 +24,6 @@ public class AuthenticationService {
 
     private AuthenticationManager authenticationManager;
     private JwtUtil jwtUtil;
-    private CookieUtil cookieUtil;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private UserMapper userMapper;
@@ -39,24 +37,16 @@ public class AuthenticationService {
         }
     }
 
-    public void login(UserLoginDto dto, HttpServletResponse response) {
+    public String login(UserLoginDto dto, HttpServletResponse response) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
         );
         if(auth.isAuthenticated()) {
             SecurityContextHolder.getContext().setAuthentication(auth);
             UserPrincipal user = (UserPrincipal) auth.getPrincipal();
-            String jwt = jwtUtil.generateToken(user.getId());
-            response.addCookie(cookieUtil.getHttpOnlyCookie(jwt));
+            return jwtUtil.generateToken(user.getId());
         }
-    }
-
-    public void logout(HttpServletResponse response) {
-        response.addCookie(cookieUtil.invalidateHttpOnlyCookie());
-    }
-
-    public UserProfileDto me(UserPrincipal userPrincipal) {
-        return userMapper.createUserProfile(userPrincipal);
+        return null;
     }
 
     private boolean userAlreadyRegistered(String email) {

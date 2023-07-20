@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import sport.app.sport_connecting_people.annotation.PasswordCheck;
 
 @Getter
 @Setter
@@ -18,7 +19,7 @@ public class UserRegistrationDto {
     @NotBlank
     private String password;
     @NotBlank
-    private String confirmPassword;
+    private String repeatedPassword;
     @Email
     private String email;
 }

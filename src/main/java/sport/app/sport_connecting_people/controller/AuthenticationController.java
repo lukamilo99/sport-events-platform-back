@@ -29,24 +29,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody UserLoginDto dto, HttpServletResponse response) {
-        authenticationService.login(dto, response);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletResponse response) {
-        authenticationService.logout(response);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<UserProfileDto> getCurrentUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return new ResponseEntity<>(authenticationService.me(userPrincipal), HttpStatus.OK);
-    }
-
-    @GetMapping("/fwd")
-    public void redirectToGoogle(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/oauth2/authorization/google");
+    public ResponseEntity<String> login(@RequestBody UserLoginDto dto, HttpServletResponse response) {
+        return new ResponseEntity<>(authenticationService.login(dto, response), HttpStatus.OK);
     }
 }

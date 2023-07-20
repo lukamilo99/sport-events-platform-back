@@ -31,7 +31,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         this.firstname = firstname;
         this.lastname = lastname;
         this.authorities = authorities;
-        this.setOAuth(isOAuth);
+        this.isOAuth = isOAuth;
     }
 
     public static UserPrincipal create(User user) {
@@ -108,8 +108,8 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         this.attributes = attributes;
     }
 
-    public void setOAuth(boolean OAuth) {
-        isOAuth = OAuth;
+    public void setOAuth(boolean oAuth) {
+        this.isOAuth = oAuth;
     }
 
     @Override

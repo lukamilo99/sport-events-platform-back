@@ -49,7 +49,7 @@ public class EventController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<Page<EventResponseDto>> getEvents(Pageable pageable) {
         return new ResponseEntity<>(eventService.getEvents(pageable), HttpStatus.OK);
     }

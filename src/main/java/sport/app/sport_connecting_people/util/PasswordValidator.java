@@ -19,7 +19,7 @@ public class PasswordValidator implements ConstraintValidator<PasswordCheck, Use
 
     @Override
     public boolean isValid(UserRegistrationDto user, ConstraintValidatorContext constraintValidatorContext) {
-        if(!user.getPassword().equals(user.getConfirmPassword()))
+        if(!user.getPassword().equals(user.getRepeatedPassword()))
             return false;
 
         Pattern pattern = Pattern.compile(PASSWORD_PATTERN);

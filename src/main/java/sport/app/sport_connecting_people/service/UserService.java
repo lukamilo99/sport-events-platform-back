@@ -2,10 +2,12 @@ package sport.app.sport_connecting_people.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import sport.app.sport_connecting_people.dto.user.UserProfileDto;
 import sport.app.sport_connecting_people.dto.user.UserUpdateDto;
 import sport.app.sport_connecting_people.entity.User;
 import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.UserRepository;
+import sport.app.sport_connecting_people.security.model.UserPrincipal;
 
 @AllArgsConstructor
 @Service
@@ -24,5 +26,9 @@ public class UserService {
     public void delete() {
         Long userId = principalService.getCurrentUserId();
         userRepository.deleteById(userId);
+    }
+
+    public UserProfileDto me(UserPrincipal userPrincipal) {
+        return userMapper.createUserProfile(userPrincipal);
     }
 }
