@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import sport.app.sport_connecting_people.dto.user.UserResponseDto;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,7 +15,10 @@ public class EventResponseDto {
     private Integer capacity;
     private Integer availableSpots;
     private String sport;
-    private String location;
-    private Date date;
+    private String streetName;
+    private String city;
+    private Double coordinatesLat;
+    private Double coordinatesLon;
+    private LocalDateTime date;
     private UserResponseDto eventCreator;
 }

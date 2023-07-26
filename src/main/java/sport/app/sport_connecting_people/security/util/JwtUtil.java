@@ -1,10 +1,11 @@
 package sport.app.sport_connecting_people.security.util;
 
+import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import sport.app.sport_connecting_people.exceptions.jwt.InvalidTokenException;
+import sport.app.sport_connecting_people.exceptions.jwt.TokenExpiredException;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -41,10 +42,18 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String jwt) {
-        Jwts.parser()
-                .setSigningKey(publicKey)
-                .parseClaimsJws(jwt);
-        return true;
+        try {
+            Jwts.parser()
+                    .setSigningKey(publicKey)
+                    .parseClaimsJws(jwt);
+            return true;
+        } catch (ExpiredJwtException e) {
+            throw new TokenExpiredException("Token has expired");
+        } catch (UnsupportedJwtException | MalformedJwtException e) {
+            throw new InvalidTokenException("Invalid token");
+        } catch (SignatureException e) {
+            throw new InvalidTokenException("Invalid token signature");
+        }
     }
 
     public Long getUserId(String jwt) {

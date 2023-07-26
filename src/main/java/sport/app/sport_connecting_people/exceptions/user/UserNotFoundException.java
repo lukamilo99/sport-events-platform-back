@@ -1,7 +1,6 @@
-package sport.app.sport_connecting_people.exceptions;
+package sport.app.sport_connecting_people.exceptions.user;
 
 public class UserNotFoundException extends RuntimeException {
-    private String message;
 
     public UserNotFoundException(String message) {
         super(message);

@@ -1,6 +1,5 @@
 package sport.app.sport_connecting_people.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -27,18 +27,29 @@ public class Event {
     @NotBlank
     private String name;
 
-    @NotBlank
+    @NotNull
     private Integer capacity;
 
     @NotBlank
     private String sport;
 
-    @NotBlank
-    private String location;
-
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @NotNull
-    private Date date;
+    private LocalDateTime date;
+
+    @NotNull
+    private LocalDateTime creationDate;
+
+    @NotBlank
+    private String streetName;
+
+    @NotBlank
+    private String city;
+
+    @NotNull
+    private Double coordinatesLat;
+
+    @NotNull
+    private Double coordinatesLon;
 
     @ManyToOne
     @JoinColumn(name = "eventCreator", referencedColumnName = "id")
@@ -50,16 +61,9 @@ public class Event {
     inverseJoinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "id"))
     private Set<User> participants;
 
-    public Event(String name, Integer capacity, String sport, String location, Date date) {
-        this.name = name;
-        this.capacity = capacity;
-        this.sport = sport;
-        this.location = location;
-        this.date = date;
-    }
-
     public void setEventCreator(User eventCreator) {
         this.eventCreator = eventCreator;
+        this.participants = new HashSet<>();
         this.participants.add(eventCreator);
     }
 

@@ -13,6 +13,8 @@ import sport.app.sport_connecting_people.dto.event.EventUpdateDto;
 import sport.app.sport_connecting_people.entity.Event;
 import sport.app.sport_connecting_people.service.EventService;
 
+import java.util.List;
+
 @AllArgsConstructor
 @RequestMapping("/event")
 @RestController
@@ -52,5 +54,10 @@ public class EventController {
     @GetMapping("/all")
     public ResponseEntity<Page<EventResponseDto>> getEvents(Pageable pageable) {
         return new ResponseEntity<>(eventService.getEvents(pageable), HttpStatus.OK);
+    }
+
+    @GetMapping("/latest")
+    public ResponseEntity<List<EventResponseDto>> getLatestEvents() {
+        return new ResponseEntity<>(eventService.getLatestEvents(), HttpStatus.OK);
     }
 }

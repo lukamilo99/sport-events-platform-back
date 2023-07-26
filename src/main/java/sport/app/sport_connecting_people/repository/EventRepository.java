@@ -1,5 +1,7 @@
 package sport.app.sport_connecting_people.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import sport.app.sport_connecting_people.entity.Event;
@@ -12,7 +14,8 @@ import java.util.Optional;
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     Optional<Event> findById(Long id);
-    Optional<List<Event>> findByLocation(String location);
+    Optional<List<Event>> findByCity(String location);
     Optional<List<Event>> findByDate(Date date);
     Optional<List<Event>> findBySport(String sport);
+    Optional<Page<Event>> findAllByOrderByCreationDateDesc(Pageable pageable);
 }

@@ -3,7 +3,7 @@ package sport.app.sport_connecting_people.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import sport.app.sport_connecting_people.entity.User;
-import sport.app.sport_connecting_people.exceptions.UserNotFoundException;
+import sport.app.sport_connecting_people.exceptions.user.UserNotFoundException;
 import sport.app.sport_connecting_people.repository.UserRepository;
 import sport.app.sport_connecting_people.security.util.SecurityUtil;
 

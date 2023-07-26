@@ -1,12 +1,12 @@
 package sport.app.sport_connecting_people.dto.event;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import sport.app.sport_connecting_people.dto.location.LocationFromApiDto;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,13 +16,12 @@ public class EventUpdateDto {
     private Long eventId;
     @NotBlank
     private String name;
-    @NotBlank
+    @NotNull
     private Integer capacity;
     @NotBlank
     private String sport;
     @NotBlank
-    private String location;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private LocationFromApiDto location;
     @NotNull
-    private Date date;
+    private LocalDateTime date;
 }

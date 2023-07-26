@@ -3,6 +3,7 @@ package sport.app.sport_connecting_people.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sport.app.sport_connecting_people.dto.event.EventCreationDto;
@@ -13,11 +14,13 @@ import sport.app.sport_connecting_people.entity.Event;
 import sport.app.sport_connecting_people.entity.User;
 import sport.app.sport_connecting_people.exceptions.AccessDeniedException;
 import sport.app.sport_connecting_people.exceptions.EventNotFoundException;
-import sport.app.sport_connecting_people.exceptions.UserNotFoundException;
+import sport.app.sport_connecting_people.exceptions.user.UserNotFoundException;
 import sport.app.sport_connecting_people.mapper.EventMapper;
 import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.EventRepository;
 import sport.app.sport_connecting_people.repository.UserRepository;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -78,6 +81,15 @@ public class EventService {
     public Page<EventResponseDto> getEvents(Pageable pageable) {
         Page<Event> events = eventRepository.findAll(pageable);
         return events.map(this::mapToEventResponseDto);
+    }
+
+    public List<EventResponseDto> getLatestEvents() {
+        Pageable topFive = PageRequest.of(0, 6);
+        Page<Event> eventPage = eventRepository.findAllByOrderByCreationDateDesc(topFive)
+                .orElseThrow(() -> new EventNotFoundException("Latest events not found"));
+        return eventPage.getContent().stream()
+                .map(this::mapToEventResponseDto)
+                .toList();
     }
 
     private EventResponseDto mapToEventResponseDto(Event event) {

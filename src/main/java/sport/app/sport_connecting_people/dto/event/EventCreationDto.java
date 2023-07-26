@@ -1,14 +1,14 @@
 package sport.app.sport_connecting_people.dto.event;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sport.app.sport_connecting_people.dto.location.LocationFromApiDto;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,13 +18,12 @@ public class EventCreationDto {
 
     @NotBlank
     private String name;
-    @NotBlank
+    @NotNull
     private Integer capacity;
     @NotBlank
     private String sport;
-    @NotBlank
-    private String location;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @NotNull
-    private Date date;
+    private LocationFromApiDto location;
+    @NotNull
+    private LocalDateTime date;
 }

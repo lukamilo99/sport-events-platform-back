@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import sport.app.sport_connecting_people.entity.AuthenticationProvider;
 import sport.app.sport_connecting_people.entity.User;
-import sport.app.sport_connecting_people.exceptions.OAuth2AuthenticationProcessingException;
+import sport.app.sport_connecting_people.exceptions.user.OAuth2AuthenticationProcessingException;
 import sport.app.sport_connecting_people.repository.RoleRepository;
 import sport.app.sport_connecting_people.repository.UserRepository;
 import sport.app.sport_connecting_people.security.model.OAuth2UserInformation;
