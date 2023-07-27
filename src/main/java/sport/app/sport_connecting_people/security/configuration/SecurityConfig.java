@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import sport.app.sport_connecting_people.security.filter.JwtAuthenticationFilter;
+import sport.app.sport_connecting_people.security.handler.JwtAuthenticationEntryPoint;
 import sport.app.sport_connecting_people.security.handler.OAuth2AuthenticationFailureHandler;
 import sport.app.sport_connecting_people.security.handler.OAuth2AuthenticationSuccessHandler;
 import sport.app.sport_connecting_people.security.repository.OAuth2AuthorizationRequestRepository;
@@ -28,6 +29,7 @@ public class SecurityConfig {
     private CustomUserDetailsService userDetailsService;
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private OAuth2AuthorizationRequestRepository oAuth2authorizationRequestRepository;
     private CustomOAuth2UserService customOAuth2UserService;
 
@@ -40,7 +42,7 @@ public class SecurityConfig {
                     .httpBasic().disable()
                     .formLogin().disable()
                     .authorizeHttpRequests()
-                    .requestMatchers("/auth/**", "/oauth2/**").permitAll()
+                    .requestMatchers("/auth/**", "/oauth2/**", "/event/latest", "/event").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .oauth2Login()
@@ -52,7 +54,10 @@ public class SecurityConfig {
                     .userInfoEndpoint().userService(customOAuth2UserService)
                     .and()
                     .successHandler(oAuth2AuthenticationSuccessHandler)
-                    .failureHandler(oAuth2AuthenticationFailureHandler);
+                    .failureHandler(oAuth2AuthenticationFailureHandler)
+                    .and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint);
             http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
             return http.build();

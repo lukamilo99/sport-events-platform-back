@@ -31,15 +31,14 @@ public class OAuth2AuthorizationRequestRepository implements AuthorizationReques
 
     @Override
     public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request, HttpServletResponse response) {
-
         if (authorizationRequest == null) {
-            this.removeAuthorizationRequestCookies(response, request);
+            removeAuthorizationRequestCookies(response, request);
             return;
         }
         String serializedCookie = cookieUtil.serialize(authorizationRequest);
         cookieUtil.appendCookie(OAUTH_2_AUTHORIZATION_REQUEST_COOKIE_NAME, serializedCookie, response);
         String redirectUri = request.getParameter(REDIRECT_URI_COOKIE_NAME);
-        if (!redirectUri.isEmpty()) {
+        if (redirectUri != null) {
             cookieUtil.appendCookie(REDIRECT_URI_COOKIE_NAME, redirectUri, response);
         }
     }

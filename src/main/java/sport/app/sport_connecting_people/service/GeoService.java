@@ -31,8 +31,7 @@ public class GeoService {
                         .build())
                 .retrieve()
                 .bodyToMono(Object.class)
-                .map(response -> locationMapper.createLocationResponseList(response))
-                .doOnNext(response -> System.out.println(response.toString()));
+                .map(response -> locationMapper.createLocationResponseList(response));
     }
 
     public Mono<LocationFromApiDto> getLocation(double latitude, double longitude) {
@@ -45,7 +44,6 @@ public class GeoService {
                         .build())
                 .retrieve()
                 .bodyToMono(Object.class)
-                .map(response -> locationMapper.createLocationResponseList(response).get(0))
-                .doOnNext(response -> System.out.println(response.toString()));
+                .map(response -> locationMapper.createLocationResponseList(response).get(0));
     }
 }

@@ -3,6 +3,7 @@ package sport.app.sport_connecting_people.controller;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import sport.app.sport_connecting_people.dto.event.EventCreationDto;
 import sport.app.sport_connecting_people.dto.event.EventResponseDto;
 import sport.app.sport_connecting_people.dto.event.EventUpdateDto;
+import sport.app.sport_connecting_people.dto.event.PaginatedEventResponseDto;
 import sport.app.sport_connecting_people.entity.Event;
 import sport.app.sport_connecting_people.service.EventService;
 
@@ -51,9 +53,16 @@ public class EventController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<Page<EventResponseDto>> getEvents(Pageable pageable) {
-        return new ResponseEntity<>(eventService.getEvents(pageable), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<PaginatedEventResponseDto> searchEvents(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String sport,
+            @RequestParam(required = false) String day,
+            @RequestParam(defaultValue = "0") int page) {
+
+        Pageable pageable = PageRequest.of(page, 6);
+        return new ResponseEntity<>(eventService.searchEvents(search, city, sport, day, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/latest")

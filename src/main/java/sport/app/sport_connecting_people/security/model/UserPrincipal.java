@@ -1,6 +1,7 @@
 package sport.app.sport_connecting_people.security.model;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
+@Setter
 public class UserPrincipal implements UserDetails, OAuth2User {
 
     private final Long id;

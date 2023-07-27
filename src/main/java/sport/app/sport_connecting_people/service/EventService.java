@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import sport.app.sport_connecting_people.dto.event.EventCreationDto;
 import sport.app.sport_connecting_people.dto.event.EventResponseDto;
 import sport.app.sport_connecting_people.dto.event.EventUpdateDto;
+import sport.app.sport_connecting_people.dto.event.PaginatedEventResponseDto;
 import sport.app.sport_connecting_people.dto.user.UserResponseDto;
 import sport.app.sport_connecting_people.entity.Event;
 import sport.app.sport_connecting_people.entity.User;
@@ -19,6 +21,7 @@ import sport.app.sport_connecting_people.mapper.EventMapper;
 import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.EventRepository;
 import sport.app.sport_connecting_people.repository.UserRepository;
+import sport.app.sport_connecting_people.specification.EventSpecification;
 
 import java.util.List;
 
@@ -78,9 +81,23 @@ public class EventService {
         event.removeParticipant(participant);
     }
 
-    public Page<EventResponseDto> getEvents(Pageable pageable) {
-        Page<Event> events = eventRepository.findAll(pageable);
-        return events.map(this::mapToEventResponseDto);
+    public PaginatedEventResponseDto searchEvents(String search, String city, String sport, String day, Pageable pageable) {
+        Specification<Event> spec = Specification
+                .where(EventSpecification.hasCity(city))
+                .and(EventSpecification.hasSport(sport))
+                .and(EventSpecification.hasName(search))
+                .and(EventSpecification.isOnDay(day));
+
+        Page<Event> eventPage = eventRepository.findAll(spec, pageable);
+        List<EventResponseDto> eventDtos = eventPage.getContent().stream()
+                .map(this::mapToEventResponseDto)
+                .toList();
+
+        PaginatedEventResponseDto response = new PaginatedEventResponseDto();
+        response.setEvents(eventDtos);
+        response.setTotalCount(getTotalCount(spec));
+
+        return response;
     }
 
     public List<EventResponseDto> getLatestEvents() {
@@ -106,5 +123,9 @@ public class EventService {
 
     private int getAvailableSpots(Event event) {
         return event.getCapacity() - event.getParticipants().size();
+    }
+
+    private long getTotalCount(Specification spec) {
+        return eventRepository.count(spec);
     }
 }

@@ -21,4 +21,5 @@ public class EventResponseDto {
     private Double coordinatesLon;
     private LocalDateTime date;
     private UserResponseDto eventCreator;
+    private Long totalCount;
 }
