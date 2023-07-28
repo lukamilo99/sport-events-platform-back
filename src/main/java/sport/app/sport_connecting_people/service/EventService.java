@@ -7,10 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import sport.app.sport_connecting_people.dto.event.EventCreationDto;
-import sport.app.sport_connecting_people.dto.event.EventResponseDto;
-import sport.app.sport_connecting_people.dto.event.EventUpdateDto;
-import sport.app.sport_connecting_people.dto.event.PaginatedEventResponseDto;
+import sport.app.sport_connecting_people.dto.event.*;
 import sport.app.sport_connecting_people.dto.user.UserResponseDto;
 import sport.app.sport_connecting_people.entity.Event;
 import sport.app.sport_connecting_people.entity.User;
@@ -43,10 +40,16 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    @Transactional
     public Event update(EventUpdateDto dto) {
         Event event = eventRepository.findById(dto.getEventId())
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + dto.getEventId()));
         return eventMapper.updateEvent(event, dto);
+    }
+
+    @Transactional
+    public void delete(Long eventId) {
+        eventRepository.deleteById(eventId);
     }
 
     @Transactional
@@ -90,7 +93,7 @@ public class EventService {
 
         Page<Event> eventPage = eventRepository.findAll(spec, pageable);
         List<EventResponseDto> eventDtos = eventPage.getContent().stream()
-                .map(this::mapToEventResponseDto)
+                .map(event -> eventMapper.createEventResponseDto(event))
                 .toList();
 
         PaginatedEventResponseDto response = new PaginatedEventResponseDto();
@@ -105,13 +108,24 @@ public class EventService {
         Page<Event> eventPage = eventRepository.findAllByOrderByCreationDateDesc(topFive)
                 .orElseThrow(() -> new EventNotFoundException("Latest events not found"));
         return eventPage.getContent().stream()
-                .map(this::mapToEventResponseDto)
+                .map(event -> eventMapper.createEventResponseDto(event))
                 .toList();
     }
 
-    private EventResponseDto mapToEventResponseDto(Event event) {
-        EventResponseDto dto = eventMapper.createEventResponseDto(event);
+    public EventDetailsResponseDto getEventDetails(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
+        return mapToEventResponseDetailsDto(event);
+    }
+
+    private EventDetailsResponseDto mapToEventResponseDetailsDto(Event event) {
+        EventDetailsResponseDto dto = eventMapper.createEventDetailsResponseDto(event);
         UserResponseDto creatorDto = userMapper.createUserResponseDto(event.getEventCreator());
+        List<UserResponseDto> participants = event.getParticipants()
+                .stream()
+                .map(user -> userMapper.createUserResponseDto(user))
+                .toList();
+        dto.setParticipants(participants);
         dto.setEventCreator(creatorDto);
         dto.setAvailableSpots(getAvailableSpots(event));
         return dto;
@@ -125,7 +139,7 @@ public class EventService {
         return event.getCapacity() - event.getParticipants().size();
     }
 
-    private long getTotalCount(Specification spec) {
+    private long getTotalCount(Specification<Event> spec) {
         return eventRepository.count(spec);
     }
 }

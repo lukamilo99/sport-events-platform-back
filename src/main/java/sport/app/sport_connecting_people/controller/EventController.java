@@ -2,16 +2,12 @@ package sport.app.sport_connecting_people.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sport.app.sport_connecting_people.dto.event.EventCreationDto;
-import sport.app.sport_connecting_people.dto.event.EventResponseDto;
-import sport.app.sport_connecting_people.dto.event.EventUpdateDto;
-import sport.app.sport_connecting_people.dto.event.PaginatedEventResponseDto;
+import sport.app.sport_connecting_people.dto.event.*;
 import sport.app.sport_connecting_people.entity.Event;
 import sport.app.sport_connecting_people.service.EventService;
 
@@ -34,6 +30,13 @@ public class EventController {
     public ResponseEntity<Event> updateEvent(@Valid @RequestBody EventUpdateDto dto) {
         return new ResponseEntity<>(eventService.update(dto), HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete/{eventId}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId) {
+        eventService.delete(eventId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @PostMapping("/join/{eventId}")
     public ResponseEntity<Void> joinEvent(@PathVariable Long eventId) {
@@ -68,5 +71,10 @@ public class EventController {
     @GetMapping("/latest")
     public ResponseEntity<List<EventResponseDto>> getLatestEvents() {
         return new ResponseEntity<>(eventService.getLatestEvents(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventDetailsResponseDto> getEventDetails(@PathVariable Long eventId) {
+        return new ResponseEntity<>(eventService.getEventDetails(eventId), HttpStatus.OK);
     }
 }

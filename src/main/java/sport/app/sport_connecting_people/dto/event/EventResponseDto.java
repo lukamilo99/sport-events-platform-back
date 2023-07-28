@@ -12,14 +12,10 @@ public class EventResponseDto {
 
     private Long id;
     private String name;
-    private Integer capacity;
-    private Integer availableSpots;
     private String sport;
     private String streetName;
     private String city;
     private Double coordinatesLat;
     private Double coordinatesLon;
     private LocalDateTime date;
-    private UserResponseDto eventCreator;
-    private Long totalCount;
 }

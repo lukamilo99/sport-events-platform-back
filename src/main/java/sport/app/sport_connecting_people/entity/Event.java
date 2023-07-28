@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -59,11 +59,11 @@ public class Event {
     @JoinTable(name = "event_user",
     joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "id"))
-    private Set<User> participants;
+    private List<User> participants;
 
     public void setEventCreator(User eventCreator) {
         this.eventCreator = eventCreator;
-        this.participants = new HashSet<>();
+        this.participants = new ArrayList<>();
         this.participants.add(eventCreator);
     }
 

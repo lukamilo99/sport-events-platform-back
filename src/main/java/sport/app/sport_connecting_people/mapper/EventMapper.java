@@ -3,6 +3,7 @@ package sport.app.sport_connecting_people.mapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import sport.app.sport_connecting_people.dto.event.EventCreationDto;
+import sport.app.sport_connecting_people.dto.event.EventDetailsResponseDto;
 import sport.app.sport_connecting_people.dto.event.EventResponseDto;
 import sport.app.sport_connecting_people.dto.event.EventUpdateDto;
 import sport.app.sport_connecting_people.dto.location.LocationFromApiDto;
@@ -46,8 +47,19 @@ public class EventMapper {
 
     public EventResponseDto createEventResponseDto(Event event) {
         EventResponseDto dto = new EventResponseDto();
-        dto.setId(event.getId());
+        mapCommonEventAttributes(event, dto);
+        return dto;
+    }
+
+    public EventDetailsResponseDto createEventDetailsResponseDto(Event event) {
+        EventDetailsResponseDto dto = new EventDetailsResponseDto();
+        mapCommonEventAttributes(event, dto);
         dto.setCapacity(event.getCapacity());
+        return dto;
+    }
+
+    private void mapCommonEventAttributes(Event event, EventResponseDto dto) {
+        dto.setId(event.getId());
         dto.setStreetName(event.getStreetName());
         dto.setCity(event.getCity());
         dto.setCoordinatesLat(event.getCoordinatesLat());
@@ -55,7 +67,6 @@ public class EventMapper {
         dto.setName(event.getName());
         dto.setDate(event.getDate());
         dto.setSport(event.getSport());
-        return dto;
     }
 
     private Map<String, String> formatLocation(LocationFromApiDto locationDto) {
