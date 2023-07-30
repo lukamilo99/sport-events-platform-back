@@ -1,6 +1,6 @@
 # Sport Events Platform
 
-This platform is a RESTful API designed to help users to find sports activities across different cities. It enables users to discover nearby sports events and also create their own.
+This platform is a RESTful API designed to help users to find sports activities across different cities. It enables users to discover, create, and join sports events across various cities.
 
 ## Technologies
 - **Spring Boot**: The foundation for creating stand-alone applications.
