@@ -1,8 +1,9 @@
-# Sport Events Platform
+# Sport Events Platform - backend
 
-This platform is a RESTful API designed to help users to find sports activities across different cities. It enables users to discover, create, and join sports events across various cities.
+This is a RESTful API and part of a full-stack application ([frontend](https://github.com/lukamilo99/sport-connecting-people-front)), designed to help users to find sports activities across different cities. It enables users to discover, create, and join sports events across various cities. 
 
 ## Technologies
+
 - **Spring Boot**: The foundation for creating stand-alone applications.
 - **Hibernate**: ORM tool for database interaction.
 - **MySQL**: Used as the primary database.
