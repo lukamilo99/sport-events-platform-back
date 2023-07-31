@@ -2,6 +2,7 @@ package sport.app.sport_connecting_people.specification;
 
 import org.springframework.data.jpa.domain.Specification;
 import sport.app.sport_connecting_people.entity.Event;
+import sport.app.sport_connecting_people.entity.User;
 
 import java.time.LocalDate;
 
@@ -31,5 +32,9 @@ public class EventSpecification {
         } else {
             return null;
         }
+    }
+
+    public static Specification<Event> hasEventCreator(User eventCreator) {
+        return (root, query, cb) -> eventCreator == null ? null : cb.equal(root.get("eventCreator"), eventCreator);
     }
 }

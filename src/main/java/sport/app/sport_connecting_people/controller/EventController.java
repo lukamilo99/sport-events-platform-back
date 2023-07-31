@@ -68,6 +68,18 @@ public class EventController {
         return new ResponseEntity<>(eventService.searchEvents(search, city, sport, day, pageable), HttpStatus.OK);
     }
 
+    @GetMapping("/user-creator")
+    public ResponseEntity<PaginatedEventResponseDto> searchUserCreator(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 6);
+        return new ResponseEntity<>(eventService.searchEventsCreatedByUser(pageable), HttpStatus.OK);
+    }
+
+    @GetMapping("/user-participant")
+    public ResponseEntity<PaginatedEventResponseDto> searchUserParticipant(@RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 6);
+        return new ResponseEntity<>(eventService.searchEventsParticipatedByUser(pageable), HttpStatus.OK);
+    }
+
     @GetMapping("/latest")
     public ResponseEntity<List<EventResponseDto>> getLatestEvents() {
         return new ResponseEntity<>(eventService.getLatestEvents(), HttpStatus.OK);

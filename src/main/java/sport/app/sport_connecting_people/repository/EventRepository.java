@@ -14,4 +14,6 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 
     Optional<Event> findById(Long id);
     Optional<Page<Event>> findAllByOrderByCreationDateDesc(Pageable pageable);
+    Optional<Page<Event>> findByEventCreatorId(Long eventCreatorId, Pageable pageable);
+    Optional<Page<Event>> findByParticipantsId(Long participantId, Pageable pageable);
 }

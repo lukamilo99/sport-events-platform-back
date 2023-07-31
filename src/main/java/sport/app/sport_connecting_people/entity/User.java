@@ -9,8 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -47,10 +47,10 @@ public class User {
     private Role role;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "eventCreator")
-    private Set<Event> eventsCreated;
+    private List<Event> eventsCreated;
 
     @ManyToMany(mappedBy = "participants")
-    private Set<Event> eventsParticipatedIn;
+    private List<Event> eventsParticipatedIn;
 
     public User(String email, String firstname, String lastname, String password, String provider) {
         this.email = email;
@@ -58,7 +58,7 @@ public class User {
         this.lastname = lastname;
         this.password = password;
         this.provider = AuthenticationProvider.valueOf(provider);
-        this.eventsCreated = new HashSet<>();
-        this.eventsParticipatedIn = new HashSet<>();
+        this.eventsCreated = new ArrayList<>();
+        this.eventsParticipatedIn = new ArrayList<>();
     }
 }

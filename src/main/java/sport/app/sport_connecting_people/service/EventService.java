@@ -98,10 +98,41 @@ public class EventService {
 
         PaginatedEventResponseDto response = new PaginatedEventResponseDto();
         response.setEvents(eventDtos);
-        response.setTotalCount(getTotalCount(spec));
+        response.setTotalCount(eventPage.getTotalElements());
 
         return response;
     }
+
+    public PaginatedEventResponseDto searchEventsCreatedByUser(Pageable pageable) {
+        Long userId = principalService.getCurrentUserId();
+        Page<Event> eventPage = eventRepository.findByEventCreatorId(userId, pageable)
+                .orElseThrow(() -> new EventNotFoundException("There are no events for user with id: " + userId));
+        List<EventResponseDto> eventDtos = eventPage.getContent().stream()
+                .map(event -> eventMapper.createEventResponseDto(event))
+                .toList();
+
+        PaginatedEventResponseDto response = new PaginatedEventResponseDto();
+        response.setEvents(eventDtos);
+        response.setTotalCount(eventPage.getTotalElements());
+
+        return response;
+    }
+
+    public PaginatedEventResponseDto searchEventsParticipatedByUser(Pageable pageable) {
+        Long userId = principalService.getCurrentUserId();
+        Page<Event> eventPage = eventRepository.findByParticipantsId(userId, pageable)
+                .orElseThrow(() -> new EventNotFoundException("There are no events for user with id: " + userId));
+        List<EventResponseDto> eventDtos = eventPage.getContent().stream()
+                .map(event -> eventMapper.createEventResponseDto(event))
+                .toList();
+
+        PaginatedEventResponseDto response = new PaginatedEventResponseDto();
+        response.setEvents(eventDtos);
+        response.setTotalCount(eventPage.getTotalElements());
+
+        return response;
+    }
+
 
     public List<EventResponseDto> getLatestEvents() {
         Pageable topFive = PageRequest.of(0, 6);
