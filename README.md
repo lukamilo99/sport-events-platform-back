@@ -24,7 +24,7 @@ This is a RESTful API and part of a full-stack application ([frontend](https://g
   - **Join & Leave:** Users can join events hosted by others and have the flexibility to leave whenever they wish.
 
 - **Event Discovery**
-  - **Event Search:** Users can browse events and filter them based on criteria such as name, sport type, city, or event date.
+  - **Event Search:** Users can browse events and filter them based on criteria such as name, sport type, city, or event date. Additionally, pagination is used to enable easier browsing of search results.
   - **Event Details:** Interested parties can see event participants, available spots, and the exact location on a map.
 
 ## Installation Guide
