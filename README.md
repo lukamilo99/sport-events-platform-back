@@ -20,7 +20,7 @@ This is a RESTful API and part of a full-stack application ([frontend](https://g
 
 - **Event Management**
   - **Event Creation:** Users can craft sports events and decide the location through address autocomplete or by marking a spot directly on the interactive map.
-  - **Event Deletion:** Event creators have the capability to delete events they've organized.
+  - **Event Modification:** Event creators have the capability to delete and update events they've organized.
   - **Join & Leave:** Users can join events hosted by others and have the flexibility to leave whenever they wish.
 
 - **Event Discovery**
