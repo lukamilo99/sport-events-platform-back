@@ -1,4 +1,4 @@
-package sport.app.sport_connecting_people.dto.user;
+package sport.app.sport_connecting_people.dto.user.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -3,7 +3,7 @@ package sport.app.sport_connecting_people.util;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import sport.app.sport_connecting_people.annotation.PasswordCheck;
-import sport.app.sport_connecting_people.dto.user.UserRegistrationDto;
+import sport.app.sport_connecting_people.dto.user.request.UserRegistrationDto;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

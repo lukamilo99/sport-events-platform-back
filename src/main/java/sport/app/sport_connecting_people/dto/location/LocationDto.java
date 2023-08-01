@@ -11,9 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LocationFromApiDto {
+public class LocationDto {
 
-    private String formatted;
+    private String formattedAddress;
     private List<Double> coordinates;
 }
 

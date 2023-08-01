@@ -8,9 +8,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import sport.app.sport_connecting_people.dto.user.UserLoginDto;
-import sport.app.sport_connecting_people.dto.user.UserProfileDto;
-import sport.app.sport_connecting_people.dto.user.UserRegistrationDto;
+import sport.app.sport_connecting_people.dto.user.request.UserLoginDto;
+import sport.app.sport_connecting_people.dto.user.request.UserRegistrationDto;
 import sport.app.sport_connecting_people.entity.User;
 import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.RoleRepository;

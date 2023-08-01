@@ -7,8 +7,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import sport.app.sport_connecting_people.dto.event.*;
-import sport.app.sport_connecting_people.dto.user.UserResponseDto;
+import sport.app.sport_connecting_people.dto.event.request.EventUpsertDto;
+import sport.app.sport_connecting_people.dto.event.response.*;
+import sport.app.sport_connecting_people.dto.user.response.UserResponseDto;
 import sport.app.sport_connecting_people.entity.Event;
 import sport.app.sport_connecting_people.entity.User;
 import sport.app.sport_connecting_people.exceptions.AccessDeniedException;
@@ -33,18 +34,18 @@ public class EventService {
     private UserMapper userMapper;
 
     @Transactional
-    public void create(EventCreationDto dto) {
-        Event event = eventMapper.createEvent(dto);
+    public void create(EventUpsertDto dto) {
+        Event event = eventMapper.mapToEvent(dto);
         User user = principalService.getCurrentUser();
         event.setEventCreator(user);
         eventRepository.save(event);
     }
 
     @Transactional
-    public Event update(EventUpdateDto dto) {
-        Event event = eventRepository.findById(dto.getEventId())
-                .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + dto.getEventId()));
-        return eventMapper.updateEvent(event, dto);
+    public void update(EventUpsertDto dto, Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
+        eventRepository.save(eventMapper.updateEventData(event, dto));
     }
 
     @Transactional
@@ -84,7 +85,7 @@ public class EventService {
         event.removeParticipant(participant);
     }
 
-    public PaginatedEventResponseDto searchEvents(String search, String city, String sport, String day, Pageable pageable) {
+    public PaginatedEventDto searchEvents(String search, String city, String sport, String day, Pageable pageable) {
         Specification<Event> spec = Specification
                 .where(EventSpecification.hasCity(city))
                 .and(EventSpecification.hasSport(sport))
@@ -92,41 +93,41 @@ public class EventService {
                 .and(EventSpecification.isOnDay(day));
 
         Page<Event> eventPage = eventRepository.findAll(spec, pageable);
-        List<EventResponseDto> eventDtos = eventPage.getContent().stream()
-                .map(event -> eventMapper.createEventResponseDto(event))
+        List<EventDto> eventDtos = eventPage.getContent().stream()
+                .map(event -> eventMapper.mapToEventDto(event))
                 .toList();
 
-        PaginatedEventResponseDto response = new PaginatedEventResponseDto();
+        PaginatedEventDto response = new PaginatedEventDto();
         response.setEvents(eventDtos);
         response.setTotalCount(eventPage.getTotalElements());
 
         return response;
     }
 
-    public PaginatedEventResponseDto searchEventsCreatedByUser(Pageable pageable) {
+    public PaginatedMyEventDto searchEventsCreatedByUser(Pageable pageable) {
         Long userId = principalService.getCurrentUserId();
         Page<Event> eventPage = eventRepository.findByEventCreatorId(userId, pageable)
                 .orElseThrow(() -> new EventNotFoundException("There are no events for user with id: " + userId));
-        List<EventResponseDto> eventDtos = eventPage.getContent().stream()
-                .map(event -> eventMapper.createEventResponseDto(event))
+        List<MyEventDto> eventDtos = eventPage.getContent().stream()
+                .map(event -> eventMapper.mapToMyEventDto(event))
                 .toList();
 
-        PaginatedEventResponseDto response = new PaginatedEventResponseDto();
+        PaginatedMyEventDto response = new PaginatedMyEventDto();
         response.setEvents(eventDtos);
         response.setTotalCount(eventPage.getTotalElements());
 
         return response;
     }
 
-    public PaginatedEventResponseDto searchEventsParticipatedByUser(Pageable pageable) {
+    public PaginatedMyEventDto searchEventsParticipatedByUser(Pageable pageable) {
         Long userId = principalService.getCurrentUserId();
         Page<Event> eventPage = eventRepository.findByParticipantsId(userId, pageable)
                 .orElseThrow(() -> new EventNotFoundException("There are no events for user with id: " + userId));
-        List<EventResponseDto> eventDtos = eventPage.getContent().stream()
-                .map(event -> eventMapper.createEventResponseDto(event))
+        List<MyEventDto> eventDtos = eventPage.getContent().stream()
+                .map(event -> eventMapper.mapToMyEventDto(event))
                 .toList();
 
-        PaginatedEventResponseDto response = new PaginatedEventResponseDto();
+        PaginatedMyEventDto response = new PaginatedMyEventDto();
         response.setEvents(eventDtos);
         response.setTotalCount(eventPage.getTotalElements());
 
@@ -134,23 +135,31 @@ public class EventService {
     }
 
 
-    public List<EventResponseDto> getLatestEvents() {
+    public List<EventDto> getLatestEvents() {
         Pageable topFive = PageRequest.of(0, 6);
         Page<Event> eventPage = eventRepository.findAllByOrderByCreationDateDesc(topFive)
                 .orElseThrow(() -> new EventNotFoundException("Latest events not found"));
         return eventPage.getContent().stream()
-                .map(event -> eventMapper.createEventResponseDto(event))
+                .map(event -> eventMapper.mapToEventDto(event))
                 .toList();
     }
 
-    public EventDetailsResponseDto getEventDetails(Long eventId) {
+    public EventDetailsDto getEventDetails(Long eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
         return mapToEventResponseDetailsDto(event);
     }
 
-    private EventDetailsResponseDto mapToEventResponseDetailsDto(Event event) {
-        EventDetailsResponseDto dto = eventMapper.createEventDetailsResponseDto(event);
+    public EventDto getEventForUpdate(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
+        EventDto dto = eventMapper.mapToEventDto(event);
+        dto.setId(null);
+        return dto;
+    }
+
+    private EventDetailsDto mapToEventResponseDetailsDto(Event event) {
+        EventDetailsDto dto = eventMapper.mapToEventDetailsDto(event);
         UserResponseDto creatorDto = userMapper.createUserResponseDto(event.getEventCreator());
         List<UserResponseDto> participants = event.getParticipants()
                 .stream()
@@ -168,9 +177,5 @@ public class EventService {
 
     private int getAvailableSpots(Event event) {
         return event.getCapacity() - event.getParticipants().size();
-    }
-
-    private long getTotalCount(Specification<Event> spec) {
-        return eventRepository.count(spec);
     }
 }

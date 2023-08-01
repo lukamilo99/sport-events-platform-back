@@ -7,8 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sport.app.sport_connecting_people.dto.event.*;
-import sport.app.sport_connecting_people.entity.Event;
+import sport.app.sport_connecting_people.dto.event.request.EventUpsertDto;
+import sport.app.sport_connecting_people.dto.event.response.EventDetailsDto;
+import sport.app.sport_connecting_people.dto.event.response.EventDto;
+import sport.app.sport_connecting_people.dto.event.response.PaginatedEventDto;
+import sport.app.sport_connecting_people.dto.event.response.PaginatedMyEventDto;
 import sport.app.sport_connecting_people.service.EventService;
 
 import java.util.List;
@@ -21,14 +24,15 @@ public class EventController {
     private EventService eventService;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createEvent(@Valid @RequestBody EventCreationDto dto) {
+    public ResponseEntity<Void> createEvent(@Valid @RequestBody EventUpsertDto dto) {
         eventService.create(dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<Event> updateEvent(@Valid @RequestBody EventUpdateDto dto) {
-        return new ResponseEntity<>(eventService.update(dto), HttpStatus.OK);
+    @PutMapping("/update/{eventId}")
+    public ResponseEntity<Void> updateEvent(@Valid @RequestBody EventUpsertDto dto, @PathVariable Long eventId) {
+        eventService.update(dto, eventId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{eventId}")
@@ -57,7 +61,7 @@ public class EventController {
     }
 
     @GetMapping
-    public ResponseEntity<PaginatedEventResponseDto> searchEvents(
+    public ResponseEntity<PaginatedEventDto> searchEvents(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String sport,
@@ -69,24 +73,29 @@ public class EventController {
     }
 
     @GetMapping("/user-creator")
-    public ResponseEntity<PaginatedEventResponseDto> searchUserCreator(@RequestParam(defaultValue = "0") int page) {
+    public ResponseEntity<PaginatedMyEventDto> searchUserCreator(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 6);
         return new ResponseEntity<>(eventService.searchEventsCreatedByUser(pageable), HttpStatus.OK);
     }
 
     @GetMapping("/user-participant")
-    public ResponseEntity<PaginatedEventResponseDto> searchUserParticipant(@RequestParam(defaultValue = "0") int page) {
+    public ResponseEntity<PaginatedMyEventDto> searchUserParticipant(@RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 6);
         return new ResponseEntity<>(eventService.searchEventsParticipatedByUser(pageable), HttpStatus.OK);
     }
 
     @GetMapping("/latest")
-    public ResponseEntity<List<EventResponseDto>> getLatestEvents() {
+    public ResponseEntity<List<EventDto>> getLatestEvents() {
         return new ResponseEntity<>(eventService.getLatestEvents(), HttpStatus.OK);
     }
 
-    @GetMapping("/{eventId}")
-    public ResponseEntity<EventDetailsResponseDto> getEventDetails(@PathVariable Long eventId) {
+    @GetMapping("/details/{eventId}")
+    public ResponseEntity<EventDetailsDto> getEventDetails(@PathVariable Long eventId) {
         return new ResponseEntity<>(eventService.getEventDetails(eventId), HttpStatus.OK);
+    }
+
+    @GetMapping("/for-update/{eventId}")
+    public ResponseEntity<EventDto> getEventForUpdate(@PathVariable Long eventId) {
+        return new ResponseEntity<>(eventService.getEventForUpdate(eventId), HttpStatus.OK);
     }
 }

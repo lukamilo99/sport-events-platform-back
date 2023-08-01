@@ -2,37 +2,38 @@ package sport.app.sport_connecting_people.mapper;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import sport.app.sport_connecting_people.dto.event.EventCreationDto;
-import sport.app.sport_connecting_people.dto.event.EventDetailsResponseDto;
-import sport.app.sport_connecting_people.dto.event.EventResponseDto;
-import sport.app.sport_connecting_people.dto.event.EventUpdateDto;
-import sport.app.sport_connecting_people.dto.location.LocationFromApiDto;
+import sport.app.sport_connecting_people.dto.event.request.EventUpsertDto;
+import sport.app.sport_connecting_people.dto.event.response.EventDetailsDto;
+import sport.app.sport_connecting_people.dto.event.response.EventDto;
+import sport.app.sport_connecting_people.dto.event.response.MyEventDto;
+import sport.app.sport_connecting_people.dto.location.LocationDto;
 import sport.app.sport_connecting_people.entity.Event;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
 @Component
 public class EventMapper {
 
-    public Event createEvent(EventCreationDto dto) {
+    public Event mapToEvent(EventUpsertDto dto) {
         Event event = new Event();
         Map<String, String> locationInfo = formatLocation(dto.getLocation());
         event.setName(dto.getName());
         event.setCapacity(dto.getCapacity());
         event.setStreetName(locationInfo.get("streetName"));
         event.setCity(locationInfo.get("city"));
-        event.setCoordinatesLat(dto.getLocation().getCoordinates().get(0));
-        event.setCoordinatesLon(dto.getLocation().getCoordinates().get(1));
+        event.setCoordinatesLon(dto.getLocation().getCoordinates().get(0));
+        event.setCoordinatesLat(dto.getLocation().getCoordinates().get(1));
         event.setSport(dto.getSport());
         event.setDate(dto.getDate());
         event.setCreationDate(LocalDateTime.now());
         return event;
     }
 
-    public Event updateEvent(Event event, EventUpdateDto dto) {
+    public Event updateEventData(Event event, EventUpsertDto dto) {
         Map<String, String> locationInfo = formatLocation(dto.getLocation());
         event.setCapacity(dto.getCapacity());
         event.setName(dto.getName());
@@ -40,39 +41,48 @@ public class EventMapper {
         event.setDate(dto.getDate());
         event.setStreetName(locationInfo.get("streetName"));
         event.setCity(locationInfo.get("city"));
-        event.setCoordinatesLat(dto.getLocation().getCoordinates().get(0));
-        event.setCoordinatesLon(dto.getLocation().getCoordinates().get(1));
+        event.setCoordinatesLon(dto.getLocation().getCoordinates().get(0));
+        event.setCoordinatesLat(dto.getLocation().getCoordinates().get(1));
         return event;
     }
 
-    public EventResponseDto createEventResponseDto(Event event) {
-        EventResponseDto dto = new EventResponseDto();
+    public EventDto mapToEventDto(Event event) {
+        EventDto dto = new EventDto();
         mapCommonEventAttributes(event, dto);
         return dto;
     }
 
-    public EventDetailsResponseDto createEventDetailsResponseDto(Event event) {
-        EventDetailsResponseDto dto = new EventDetailsResponseDto();
-        mapCommonEventAttributes(event, dto);
-        dto.setCapacity(event.getCapacity());
-        return dto;
-    }
-
-    private void mapCommonEventAttributes(Event event, EventResponseDto dto) {
+    public MyEventDto mapToMyEventDto(Event event) {
+        MyEventDto dto = new MyEventDto();
         dto.setId(event.getId());
-        dto.setStreetName(event.getStreetName());
-        dto.setCity(event.getCity());
-        dto.setCoordinatesLat(event.getCoordinatesLat());
-        dto.setCoordinatesLon(event.getCoordinatesLon());
+        dto.setName(event.getName());
+        return dto;
+    }
+
+    public EventDetailsDto mapToEventDetailsDto(Event event) {
+        EventDetailsDto dto = new EventDetailsDto();
+        mapCommonEventAttributes(event, dto);
+        return dto;
+    }
+
+    private void mapCommonEventAttributes(Event event, EventDto dto) {
+        dto.setId(event.getId());
+        dto.setLocation(new LocationDto(
+                event.getStreetName() + ", " + event.getCity(),
+                List.of(event.getCoordinatesLat(),
+                        event.getCoordinatesLon())
+        ));
         dto.setName(event.getName());
         dto.setDate(event.getDate());
         dto.setSport(event.getSport());
+        dto.setCapacity(event.getCapacity());
     }
 
-    private Map<String, String> formatLocation(LocationFromApiDto locationDto) {
+    private Map<String, String> formatLocation(LocationDto locationDto) {
         Map<String, String> locationInfo = new HashMap<>();
-        String[] locationParts = locationDto.getFormatted().split(",");
+        String[] locationParts = locationDto.getFormattedAddress().split(",");
         if (locationParts.length == 2) {
+            locationInfo.put("streetName", "Unknown");
             locationInfo.put("city", locationParts[0].replaceAll("\\d", "").trim());
         }
         else if (locationParts.length == 3) {
