@@ -17,6 +17,7 @@ This is a RESTful API and part of a full-stack application ([frontend](https://g
 - **User Account Management**
   - **Registration & Login:** Users can register manually or through their Google accounts.
   - **Profile Editing:** Users who have registered can update their name, surname, and email address(only manually registered users).
+  - **Role-Based Access Control:** The platform uses roles to determine user permissions, restricting actions based on the user's role.
 
 - **Event Management**
   - **Event Creation:** Users can craft sports events and decide the location through address autocomplete or by marking a spot directly on the interactive map.
