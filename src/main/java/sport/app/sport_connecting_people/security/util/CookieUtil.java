@@ -12,19 +12,6 @@ import java.util.Optional;
 @Service
 public class CookieUtil {
 
-    public Cookie getHttpOnlyCookie(String token) {
-        Cookie cookie = new Cookie("jwt", token);
-        cookie.setHttpOnly(true);
-        return cookie;
-    }
-
-    public Cookie invalidateHttpOnlyCookie() {
-        Cookie cookie = new Cookie("jwt", null);
-        cookie.setMaxAge(0);
-        cookie.setHttpOnly(true);
-        return cookie;
-    }
-
     public void appendCookie(String cookieName, String cookieValue, HttpServletResponse response) {
         Cookie cookie = new Cookie(cookieName, cookieValue);
         cookie.setPath("/");

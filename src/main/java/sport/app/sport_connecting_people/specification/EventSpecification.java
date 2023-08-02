@@ -2,22 +2,21 @@ package sport.app.sport_connecting_people.specification;
 
 import org.springframework.data.jpa.domain.Specification;
 import sport.app.sport_connecting_people.entity.Event;
-import sport.app.sport_connecting_people.entity.User;
 
 import java.time.LocalDate;
 
 public class EventSpecification {
 
     public static Specification<Event> hasCity(String city) {
-        return (root, query, cb) -> city == null ? null : cb.like(root.get("city"), "%" + city + "%");
+        return (root, query, cb) -> city == null ? cb.conjunction() : cb.like(root.get("city"), "%" + city + "%");
     }
 
     public static Specification<Event> hasSport(String sport) {
-        return (root, query, cb) -> sport == null ? null : cb.equal(root.get("sport"), sport);
+        return (root, query, cb) -> sport == null ? cb.conjunction() : cb.equal(root.get("sport"), sport);
     }
 
     public static Specification<Event> hasName(String search) {
-        return (root, query, cb) -> search == null ? null : cb.like(root.get("name"), "%" + search + "%");
+        return (root, query, cb) -> search == null ? cb.conjunction() : cb.like(root.get("name"), "%" + search + "%");
     }
 
     public static Specification<Event> isOnDay(String dayOption) {
@@ -32,9 +31,5 @@ public class EventSpecification {
         } else {
             return null;
         }
-    }
-
-    public static Specification<Event> hasEventCreator(User eventCreator) {
-        return (root, query, cb) -> eventCreator == null ? null : cb.equal(root.get("eventCreator"), eventCreator);
     }
 }

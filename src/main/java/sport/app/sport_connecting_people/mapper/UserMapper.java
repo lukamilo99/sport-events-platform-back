@@ -31,14 +31,14 @@ public class UserMapper {
         return user;
     }
 
-    public UserResponseDto createUserResponseDto(User user) {
+    public UserResponseDto mapToUserResponseDto(User user) {
         UserResponseDto dto = new UserResponseDto();
         dto.setId(user.getId());
         dto.setName(user.getFirstname() + " " + user.getLastname());
         return dto;
     }
 
-    public UserProfileDto createUserProfile(UserPrincipal userPrincipal) {
+    public UserProfileDto mapToUserProfile(UserPrincipal userPrincipal) {
         UserProfileDto dto = new UserProfileDto();
         dto.setId(userPrincipal.getId());
         dto.setEmail(userPrincipal.getEmail());
@@ -46,6 +46,19 @@ public class UserMapper {
         dto.setLastname(userPrincipal.getLastname());
         dto.setRole(userPrincipal.getAuthorities().toArray()[0].toString());
         dto.setOAuth(userPrincipal.isOAuth());
+        dto.setEnabled(userPrincipal.isEnabled());
+        return dto;
+    }
+
+    public UserProfileDto mapToUserProfile(User user) {
+        UserProfileDto dto = new UserProfileDto();
+        dto.setId(user.getId());
+        dto.setEmail(user.getEmail());
+        dto.setFirstname(user.getFirstname());
+        dto.setLastname(user.getLastname());
+        dto.setRole(user.getRole().getName());
+        dto.setOAuth(user.getProvider().toString().equals("google"));
+        dto.setEnabled(user.isEnabled());
         return dto;
     }
 }

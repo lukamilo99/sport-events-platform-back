@@ -17,5 +17,4 @@ class CorsConfig implements WebMvcConfigurer {
                 .exposedHeaders("Location")
                 .maxAge(3600);
     }
-
 }

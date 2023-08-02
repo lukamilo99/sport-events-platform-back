@@ -25,8 +25,12 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     private final Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
     private boolean isOAuth;
+    private boolean isEnabled;
 
-    public UserPrincipal(Long id, String email, String password, String firstname, String lastname, Collection<? extends GrantedAuthority> authorities, boolean isOAuth) {
+    public UserPrincipal(Long id, String email,
+                         String password, String firstname, String lastname,
+                         Collection<? extends GrantedAuthority> authorities,
+                         boolean isOAuth, boolean isEnabled) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -34,6 +38,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         this.lastname = lastname;
         this.authorities = authorities;
         this.isOAuth = isOAuth;
+        this.isEnabled = isEnabled;
     }
 
     public static UserPrincipal create(User user) {
@@ -47,14 +52,14 @@ public class UserPrincipal implements UserDetails, OAuth2User {
                 user.getFirstname(),
                 user.getLastname(),
                 authorities,
-                false
+                user.getProvider().toString().equals("google"),
+                user.isEnabled()
         );
     }
 
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
         UserPrincipal userPrincipal = UserPrincipal.create(user);
         userPrincipal.setAttributes(attributes);
-        userPrincipal.setOAuth(true);
         return userPrincipal;
     }
 
@@ -93,7 +98,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
 
     @Override

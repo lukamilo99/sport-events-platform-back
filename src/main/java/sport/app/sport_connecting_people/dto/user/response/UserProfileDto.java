@@ -17,4 +17,5 @@ public class UserProfileDto {
     private String email;
     private String role;
     private boolean isOAuth;
+    private boolean isEnabled;
 }

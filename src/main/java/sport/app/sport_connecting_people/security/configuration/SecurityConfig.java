@@ -43,6 +43,8 @@ public class SecurityConfig {
                     .formLogin().disable()
                     .authorizeHttpRequests()
                     .requestMatchers("/auth/**", "/oauth2/**", "/event/latest", "/event").permitAll()
+                    .requestMatchers("/user/ban/**", "/user/unban/**", "/user/delete/**", "/user/search-users")
+                    .hasAuthority("ADMIN")
                     .anyRequest().authenticated()
                     .and()
                     .oauth2Login()

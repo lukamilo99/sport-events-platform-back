@@ -46,6 +46,8 @@ public class User {
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
+    private boolean isEnabled;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "eventCreator")
     private List<Event> eventsCreated;
 
@@ -60,5 +62,6 @@ public class User {
         this.provider = AuthenticationProvider.valueOf(provider);
         this.eventsCreated = new ArrayList<>();
         this.eventsParticipatedIn = new ArrayList<>();
+        this.isEnabled = true;
     }
 }

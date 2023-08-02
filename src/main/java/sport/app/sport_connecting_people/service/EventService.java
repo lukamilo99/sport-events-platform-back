@@ -12,8 +12,8 @@ import sport.app.sport_connecting_people.dto.event.response.*;
 import sport.app.sport_connecting_people.dto.user.response.UserResponseDto;
 import sport.app.sport_connecting_people.entity.Event;
 import sport.app.sport_connecting_people.entity.User;
-import sport.app.sport_connecting_people.exceptions.AccessDeniedException;
-import sport.app.sport_connecting_people.exceptions.EventNotFoundException;
+import sport.app.sport_connecting_people.exceptions.user.AccessDeniedException;
+import sport.app.sport_connecting_people.exceptions.event.EventNotFoundException;
 import sport.app.sport_connecting_people.exceptions.user.UserNotFoundException;
 import sport.app.sport_connecting_people.mapper.EventMapper;
 import sport.app.sport_connecting_people.mapper.UserMapper;
@@ -160,10 +160,10 @@ public class EventService {
 
     private EventDetailsDto mapToEventResponseDetailsDto(Event event) {
         EventDetailsDto dto = eventMapper.mapToEventDetailsDto(event);
-        UserResponseDto creatorDto = userMapper.createUserResponseDto(event.getEventCreator());
+        UserResponseDto creatorDto = userMapper.mapToUserResponseDto(event.getEventCreator());
         List<UserResponseDto> participants = event.getParticipants()
                 .stream()
-                .map(user -> userMapper.createUserResponseDto(user))
+                .map(user -> userMapper.mapToUserResponseDto(user))
                 .toList();
         dto.setParticipants(participants);
         dto.setEventCreator(creatorDto);

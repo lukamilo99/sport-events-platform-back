@@ -1,4 +1,4 @@
-package sport.app.sport_connecting_people.exceptions;
+package sport.app.sport_connecting_people.exceptions.event;
 
 public class EventNotFoundException extends RuntimeException {
 

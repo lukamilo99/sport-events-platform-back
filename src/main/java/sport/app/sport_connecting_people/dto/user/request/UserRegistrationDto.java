@@ -10,6 +10,7 @@ import sport.app.sport_connecting_people.annotation.PasswordCheck;
 @Getter
 @Setter
 @ToString
+@PasswordCheck
 public class UserRegistrationDto {
 
     @NotBlank

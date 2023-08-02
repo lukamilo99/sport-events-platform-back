@@ -60,7 +60,7 @@ public class EventController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/search-events")
     public ResponseEntity<PaginatedEventDto> searchEvents(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String city,
