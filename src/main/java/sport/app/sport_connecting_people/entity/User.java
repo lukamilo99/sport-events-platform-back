@@ -6,13 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
@@ -54,12 +52,7 @@ public class User {
     @ManyToMany(mappedBy = "participants")
     private List<Event> eventsParticipatedIn;
 
-    public User(String email, String firstname, String lastname, String password, String provider) {
-        this.email = email;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.password = password;
-        this.provider = AuthenticationProvider.valueOf(provider);
+    public User() {
         this.eventsCreated = new ArrayList<>();
         this.eventsParticipatedIn = new ArrayList<>();
         this.isEnabled = true;

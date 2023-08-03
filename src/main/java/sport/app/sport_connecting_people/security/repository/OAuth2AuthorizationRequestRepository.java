@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.stereotype.Component;
-import sport.app.sport_connecting_people.security.util.CookieUtil;
+import sport.app.sport_connecting_people.util.CookieUtil;
 
 import java.util.Optional;
 

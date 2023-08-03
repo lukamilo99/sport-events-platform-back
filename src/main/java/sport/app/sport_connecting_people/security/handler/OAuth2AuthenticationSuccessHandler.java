@@ -9,8 +9,8 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 import sport.app.sport_connecting_people.security.repository.OAuth2AuthorizationRequestRepository;
-import sport.app.sport_connecting_people.security.util.CookieUtil;
-import sport.app.sport_connecting_people.security.util.JwtUtil;
+import sport.app.sport_connecting_people.util.CookieUtil;
+import sport.app.sport_connecting_people.util.JwtUtil;
 import sport.app.sport_connecting_people.security.model.UserPrincipal;
 
 import java.io.IOException;

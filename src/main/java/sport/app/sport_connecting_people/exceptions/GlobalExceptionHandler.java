@@ -9,18 +9,25 @@ import org.springframework.web.context.request.WebRequest;
 import sport.app.sport_connecting_people.exceptions.jwt.InvalidTokenException;
 import sport.app.sport_connecting_people.exceptions.jwt.TokenExpiredException;
 import sport.app.sport_connecting_people.exceptions.user.AccessDeniedException;
+import sport.app.sport_connecting_people.exceptions.user.UserAlreadyExistsException;
+import sport.app.sport_connecting_people.exceptions.user.UserBannedException;
 
 import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> handleUserAlreadyExists(UserAlreadyExistsException ex, WebRequest request) {
+        return buildErrorResponse(ex, HttpStatus.CONFLICT, request);
+    }
+
     @ExceptionHandler({TokenExpiredException.class, InvalidTokenException.class})
     public ResponseEntity<ExceptionResponse> handleTokenExceptions(Exception ex, WebRequest request) {
         return buildErrorResponse(ex, HttpStatus.UNAUTHORIZED, request);
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler({AccessDeniedException.class, UserBannedException.class})
     public ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
         return buildErrorResponse(ex, HttpStatus.FORBIDDEN, request);
     }

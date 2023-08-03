@@ -25,38 +25,42 @@ public class EventController {
 
     @PostMapping("/create")
     public ResponseEntity<Void> createEvent(@Valid @RequestBody EventUpsertDto dto) {
-        eventService.create(dto);
+        eventService.createEvent(dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/update/{eventId}")
     public ResponseEntity<Void> updateEvent(@Valid @RequestBody EventUpsertDto dto, @PathVariable Long eventId) {
-        eventService.update(dto, eventId);
+        eventService.updateEvent(dto, eventId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{eventId}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId) {
-        eventService.delete(eventId);
+        eventService.deleteEvent(eventId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/details/{eventId}")
+    public ResponseEntity<EventDetailsDto> getEventDetails(@PathVariable Long eventId) {
+        return new ResponseEntity<>(eventService.getEventDetails(eventId), HttpStatus.OK);
+    }
 
     @PostMapping("/join/{eventId}")
     public ResponseEntity<Void> joinEvent(@PathVariable Long eventId) {
-        eventService.join(eventId);
+        eventService.joinEvent(eventId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/leave/{eventId}")
     public ResponseEntity<Void> leaveEvent(@PathVariable Long eventId) {
-        eventService.leave(eventId);
+        eventService.leaveEvent(eventId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/remove/{eventId}/{participantId}")
     public ResponseEntity<Void> removeParticipant(@PathVariable Long eventId, @PathVariable Long participantId) {
-        eventService.removeParticipant(eventId, participantId);
+        eventService.removeParticipantFromEvent(eventId, participantId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -87,11 +91,6 @@ public class EventController {
     @GetMapping("/latest")
     public ResponseEntity<List<EventDto>> getLatestEvents() {
         return new ResponseEntity<>(eventService.getLatestEvents(), HttpStatus.OK);
-    }
-
-    @GetMapping("/details/{eventId}")
-    public ResponseEntity<EventDetailsDto> getEventDetails(@PathVariable Long eventId) {
-        return new ResponseEntity<>(eventService.getEventDetails(eventId), HttpStatus.OK);
     }
 
     @GetMapping("/for-update/{eventId}")

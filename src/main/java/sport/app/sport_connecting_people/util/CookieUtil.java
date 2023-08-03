@@ -1,15 +1,15 @@
-package sport.app.sport_connecting_people.security.util;
+package sport.app.sport_connecting_people.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
 import java.util.Base64;
 import java.util.Optional;
 
-@Service
+@Component
 public class CookieUtil {
 
     public void appendCookie(String cookieName, String cookieValue, HttpServletResponse response) {

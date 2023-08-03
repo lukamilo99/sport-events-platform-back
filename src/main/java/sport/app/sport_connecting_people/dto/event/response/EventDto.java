@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventDto {
 
-    //Moglo je da se radi nasedjivanje EventCreateOrUpdateDto, ali ovako je vise citko
+    //Moglo je da se radi nasedjivanje EventCreateOrUpdateDto , ali ovako je vise citko
 
     @NotNull
     private Long id;

@@ -2,7 +2,6 @@ package sport.app.sport_connecting_people.security.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -10,13 +9,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import sport.app.sport_connecting_people.security.util.JwtUtil;
+import sport.app.sport_connecting_people.util.JwtUtil;
 import sport.app.sport_connecting_people.security.service.CustomUserDetailsService;
 
 import java.io.IOException;
 
 @AllArgsConstructor
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private JwtUtil jwtUtil;

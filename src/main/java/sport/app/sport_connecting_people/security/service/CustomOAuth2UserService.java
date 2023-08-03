@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import sport.app.sport_connecting_people.entity.AuthenticationProvider;
 import sport.app.sport_connecting_people.entity.User;
 import sport.app.sport_connecting_people.exceptions.user.OAuth2AuthenticationProcessingException;
+import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.RoleRepository;
 import sport.app.sport_connecting_people.repository.UserRepository;
 import sport.app.sport_connecting_people.security.model.OAuth2UserInformation;
@@ -22,6 +23,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private UserMapper userMapper;
 
     @Transactional
     @Override
@@ -40,7 +42,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user = userRepository.findByEmail(oAuth2UserInfo.getEmail()).orElse(null);
         if(user != null) {
             if(!user.getProvider().equals(AuthenticationProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
-                throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
+                throw new OAuth2AuthenticationProcessingException(
+                        "Looks like you're signed up with " +
                         user.getProvider() + " account. Please use your " + user.getProvider() +
                         " account to login.");
             }
@@ -52,28 +55,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInformation oAuth2UserInfo) {
-        User user = new User();
-        String[] fullName = oAuth2UserInfo.getName().split(" ");
-        String firstname = fullName[0];
-        String lastname = fullName[1];
-
-        user.setProvider(AuthenticationProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
-        user.setProviderId(oAuth2UserInfo.getProviderId());
-        user.setFirstname(firstname);
-        user.setLastname(lastname);
-        user.setEmail(oAuth2UserInfo.getEmail());
+        User user = userMapper.createOAuthUser(oAuth2UserRequest, oAuth2UserInfo);
         user.setRole(roleRepository.findByName("USER"));
         userRepository.save(user);
         return user;
     }
 
     private void updateExistingUser(User user, OAuth2UserInformation oAuth2UserInfo) {
-        String[] fullName = oAuth2UserInfo.getName().split(" ");
-        String firstname = fullName[0];
-        String lastname = fullName[1];
-
-        user.setFirstname(firstname);
-        user.setLastname(lastname);
-        userRepository.save(user);
+        userRepository.save(userMapper.updateOAuthUserData(user, oAuth2UserInfo));
     }
 }

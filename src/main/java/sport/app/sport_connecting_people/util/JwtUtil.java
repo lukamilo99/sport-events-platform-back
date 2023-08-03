@@ -1,8 +1,8 @@
-package sport.app.sport_connecting_people.security.util;
+package sport.app.sport_connecting_people.util;
 
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
 import sport.app.sport_connecting_people.exceptions.jwt.InvalidTokenException;
 import sport.app.sport_connecting_people.exceptions.jwt.TokenExpiredException;
@@ -15,7 +15,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Date;
 
-@Service
+@Component
 public class JwtUtil {
 
     private PrivateKey privateKey;

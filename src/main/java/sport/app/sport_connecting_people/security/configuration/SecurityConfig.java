@@ -7,8 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import sport.app.sport_connecting_people.security.filter.JwtAuthenticationFilter;
@@ -16,17 +14,14 @@ import sport.app.sport_connecting_people.security.handler.JwtAuthenticationEntry
 import sport.app.sport_connecting_people.security.handler.OAuth2AuthenticationFailureHandler;
 import sport.app.sport_connecting_people.security.handler.OAuth2AuthenticationSuccessHandler;
 import sport.app.sport_connecting_people.security.repository.OAuth2AuthorizationRequestRepository;
-import sport.app.sport_connecting_people.security.util.JwtUtil;
 import sport.app.sport_connecting_people.security.service.CustomOAuth2UserService;
-import sport.app.sport_connecting_people.security.service.CustomUserDetailsService;
 
 @AllArgsConstructor
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
 
-    private JwtUtil jwtUtil;
-    private CustomUserDetailsService userDetailsService;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -43,8 +38,7 @@ public class SecurityConfig {
                     .formLogin().disable()
                     .authorizeHttpRequests()
                     .requestMatchers("/auth/**", "/oauth2/**", "/event/latest", "/event").permitAll()
-                    .requestMatchers("/user/ban/**", "/user/unban/**", "/user/delete/**", "/user/search-users")
-                    .hasAuthority("ADMIN")
+                    .requestMatchers("/user/ban/**", "/user/unban/**", "/user/delete/**", "/user/search-users").hasAuthority("ADMIN")
                     .anyRequest().authenticated()
                     .and()
                     .oauth2Login()
@@ -60,7 +54,7 @@ public class SecurityConfig {
                     .and()
                     .exceptionHandling()
                     .authenticationEntryPoint(jwtAuthenticationEntryPoint);
-            http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+            http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
             return http.build();
 
@@ -72,15 +66,5 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtUtil, userDetailsService);
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

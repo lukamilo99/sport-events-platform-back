@@ -33,11 +33,6 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<UserProfileDto> getCurrentUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return new ResponseEntity<>(userService.me(userPrincipal), HttpStatus.OK);
-    }
-
     @PutMapping("/ban/{userId}")
     public ResponseEntity<Void> banUser(@PathVariable Long userId) {
         userService.banUser(userId);
@@ -55,5 +50,10 @@ public class UserController {
                                                                @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 6);
         return new ResponseEntity<>(userService.searchUsers(name, pageable), HttpStatus.OK);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserProfileDto> getPrincipal(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return new ResponseEntity<>(userService.getPrincipal(userPrincipal), HttpStatus.OK);
     }
 }

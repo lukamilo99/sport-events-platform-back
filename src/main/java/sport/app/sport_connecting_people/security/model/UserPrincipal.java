@@ -22,10 +22,10 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     private final String firstname;
     private final String lastname;
     private final String password;
-    private final Collection<? extends GrantedAuthority> authorities;
-    private Map<String, Object> attributes;
     private boolean isOAuth;
     private boolean isEnabled;
+    private final Collection<? extends GrantedAuthority> authorities;
+    private Map<String, Object> attributes;
 
     public UserPrincipal(Long id, String email,
                          String password, String firstname, String lastname,
