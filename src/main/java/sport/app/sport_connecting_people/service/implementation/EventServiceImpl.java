@@ -12,6 +12,7 @@ import sport.app.sport_connecting_people.dto.event.response.*;
 import sport.app.sport_connecting_people.dto.user.response.UserResponseDto;
 import sport.app.sport_connecting_people.entity.Event;
 import sport.app.sport_connecting_people.entity.User;
+import sport.app.sport_connecting_people.exceptions.event.EventFullException;
 import sport.app.sport_connecting_people.exceptions.user.AccessDeniedException;
 import sport.app.sport_connecting_people.exceptions.event.EventNotFoundException;
 import sport.app.sport_connecting_people.exceptions.user.UserNotFoundException;
@@ -20,6 +21,7 @@ import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.EventRepository;
 import sport.app.sport_connecting_people.repository.UserRepository;
 import sport.app.sport_connecting_people.service.EventService;
+import sport.app.sport_connecting_people.service.PrincipalService;
 import sport.app.sport_connecting_people.specification.EventSpecification;
 
 import java.util.List;
@@ -30,14 +32,14 @@ public class EventServiceImpl implements EventService {
 
     private EventRepository eventRepository;
     private UserRepository userRepository;
-    private PrincipalServiceImpl principalServiceImpl;
+    private PrincipalService principalService;
     private EventMapper eventMapper;
     private UserMapper userMapper;
 
     @Transactional
     public void createEvent(EventUpsertDto dto) {
         Event event = eventMapper.mapToEvent(dto);
-        User user = principalServiceImpl.getCurrentUser();
+        User user = principalService.getCurrentUser();
         event.setEventCreator(user);
         eventRepository.save(event);
     }
@@ -54,21 +56,28 @@ public class EventServiceImpl implements EventService {
         eventRepository.deleteById(eventId);
     }
 
+    public EventDetailsDto getEventDetails(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
+        return mapToEventResponseDetailsDto(event);
+    }
+
     @Transactional
     public void joinEvent(Long eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
-        User user = principalServiceImpl.getCurrentUser();
-        if(isEventAvailable(event)) {
+        User user = principalService.getCurrentUser();
+        if(!isEventFull(event)) {
             event.addParticipant(user);
         }
+        else throw new EventFullException("Event " + event.getName() + " is full");
     }
 
     @Transactional
     public void leaveEvent(Long eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
-        User user = principalServiceImpl.getCurrentUser();
+        User user = principalService.getCurrentUser();
         event.removeParticipant(user);
     }
 
@@ -79,7 +88,7 @@ public class EventServiceImpl implements EventService {
         User participant = userRepository.findById(participantId)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + participantId));
 
-        Long currentUserId = principalServiceImpl.getCurrentUserId();
+        Long currentUserId = principalService.getCurrentUserId();
         if (!event.getEventCreator().getId().equals(currentUserId)) {
             throw new AccessDeniedException("Only the event creator can remove participants");
         }
@@ -106,49 +115,55 @@ public class EventServiceImpl implements EventService {
     }
 
     public PaginatedMyEventDto searchEventsCreatedByUser(Pageable pageable) {
-        Long userId = principalServiceImpl.getCurrentUserId();
-        Page<Event> eventPage = eventRepository.findByEventCreatorId(userId, pageable)
-                .orElseThrow(() -> new EventNotFoundException("There are no events for user with id: " + userId));
-        List<MyEventDto> eventDtos = eventPage.getContent().stream()
-                .map(event -> eventMapper.mapToMyEventDto(event))
-                .toList();
-
         PaginatedMyEventDto response = new PaginatedMyEventDto();
-        response.setEvents(eventDtos);
-        response.setTotalCount(eventPage.getTotalElements());
+        Long userId = principalService.getCurrentUserId();
+        Page<Event> eventPage = eventRepository.findByEventCreatorId(userId, pageable);
 
+        if(!eventPage.isEmpty()) {
+            List<MyEventDto> eventDtos = eventPage.getContent().stream()
+                    .map(event -> eventMapper.mapToMyEventDto(event))
+                    .toList();
+
+            response.setEvents(eventDtos);
+            response.setTotalCount(eventPage.getTotalElements());
+        } else {
+            response.setEvents(List.of());
+            response.setTotalCount(0L);
+        }
         return response;
     }
 
     public PaginatedMyEventDto searchEventsParticipatedByUser(Pageable pageable) {
-        Long userId = principalServiceImpl.getCurrentUserId();
-        Page<Event> eventPage = eventRepository.findByParticipantsId(userId, pageable)
-                .orElseThrow(() -> new EventNotFoundException("There are no events for user with id: " + userId));
-        List<MyEventDto> eventDtos = eventPage.getContent().stream()
-                .map(event -> eventMapper.mapToMyEventDto(event))
-                .toList();
-
         PaginatedMyEventDto response = new PaginatedMyEventDto();
-        response.setEvents(eventDtos);
-        response.setTotalCount(eventPage.getTotalElements());
+        Long userId = principalService.getCurrentUserId();
+        Page<Event> eventPage = eventRepository.findByParticipantsId(userId, pageable);
 
+        if(!eventPage.isEmpty()) {
+            List<MyEventDto> eventDtos = eventPage.getContent().stream()
+                    .map(event -> eventMapper.mapToMyEventDto(event))
+                    .toList();
+
+            response.setEvents(eventDtos);
+            response.setTotalCount(eventPage.getTotalElements());
+        } else {
+            response.setEvents(List.of());
+            response.setTotalCount(0L);
+        }
         return response;
     }
 
 
     public List<EventDto> getLatestEvents() {
         Pageable topSix = PageRequest.of(0, 6);
-        Page<Event> eventPage = eventRepository.findAllByOrderByCreationDateDesc(topSix)
-                .orElseThrow(() -> new EventNotFoundException("Latest events not found"));
-        return eventPage.getContent().stream()
-                .map(event -> eventMapper.mapToEventDto(event))
-                .toList();
-    }
+        Page<Event> eventPage = eventRepository.findAllByOrderByCreationDateDesc(topSix);
 
-    public EventDetailsDto getEventDetails(Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
-        return mapToEventResponseDetailsDto(event);
+        if(!eventPage.isEmpty()) {
+            return eventPage.getContent().stream()
+                    .map(event -> eventMapper.mapToEventDto(event))
+                    .toList();
+        } else {
+            return List.of();
+        }
     }
 
     public EventDto getEventForUpdate(Long eventId) {
@@ -172,7 +187,7 @@ public class EventServiceImpl implements EventService {
         return dto;
     }
 
-    private boolean isEventAvailable(Event event) {
+    private boolean isEventFull(Event event) {
         return getAvailableSpots(event) > 0;
     }
 

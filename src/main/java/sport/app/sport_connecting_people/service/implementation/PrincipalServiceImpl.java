@@ -26,7 +26,7 @@ public class PrincipalServiceImpl implements PrincipalService {
         return getCurrentUserPrincipal().getId();
     }
 
-    private UserPrincipal getCurrentUserPrincipal() {
+    public UserPrincipal getCurrentUserPrincipal() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof UserPrincipal) {
             return (UserPrincipal) authentication.getPrincipal();

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,5 +57,9 @@ public class User {
         this.eventsCreated = new ArrayList<>();
         this.eventsParticipatedIn = new ArrayList<>();
         this.isEnabled = true;
+    }
+
+    public void setEncodedPassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }

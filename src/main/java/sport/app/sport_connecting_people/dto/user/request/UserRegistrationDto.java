@@ -2,15 +2,15 @@ package sport.app.sport_connecting_people.dto.user.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import sport.app.sport_connecting_people.annotation.PasswordCheck;
 
+@PasswordCheck
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Getter
 @Setter
-@ToString
-@PasswordCheck
 public class UserRegistrationDto {
 
     @NotBlank

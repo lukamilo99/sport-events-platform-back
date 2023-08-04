@@ -1,4 +1,4 @@
-package sport.app.sport_connecting_people.controller.config;
+package sport.app.sport_connecting_people.config;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

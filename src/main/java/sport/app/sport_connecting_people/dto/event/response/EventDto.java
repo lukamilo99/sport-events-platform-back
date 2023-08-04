@@ -16,16 +16,10 @@ public class EventDto {
 
     //Moglo je da se radi nasedjivanje EventCreateOrUpdateDto , ali ovako je vise citko
 
-    @NotNull
     private Long id;
-    @NotBlank
     private String name;
-    @NotNull
     private Integer capacity;
-    @NotBlank
     private String sport;
-    @NotNull
     private LocationDto location;
-    @NotNull
     private LocalDateTime date;
 }

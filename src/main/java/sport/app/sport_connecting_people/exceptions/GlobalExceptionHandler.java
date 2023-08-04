@@ -6,21 +6,30 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import sport.app.sport_connecting_people.exceptions.event.EventFullException;
+import sport.app.sport_connecting_people.exceptions.event.EventNotFoundException;
 import sport.app.sport_connecting_people.exceptions.jwt.InvalidTokenException;
 import sport.app.sport_connecting_people.exceptions.jwt.TokenExpiredException;
 import sport.app.sport_connecting_people.exceptions.user.AccessDeniedException;
 import sport.app.sport_connecting_people.exceptions.user.UserAlreadyExistsException;
 import sport.app.sport_connecting_people.exceptions.user.UserBannedException;
+import sport.app.sport_connecting_people.exceptions.user.UserNotFoundException;
 
 import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ExceptionResponse> handleUserAlreadyExists(UserAlreadyExistsException ex, WebRequest request) {
+    @ExceptionHandler({UserAlreadyExistsException.class, EventFullException.class})
+    public ResponseEntity<ExceptionResponse> handleConflicts(Exception ex, WebRequest request) {
         return buildErrorResponse(ex, HttpStatus.CONFLICT, request);
     }
+
+    @ExceptionHandler({EventNotFoundException.class, UserNotFoundException.class})
+    public ResponseEntity<ExceptionResponse> handleEntityNotFound(Exception ex, WebRequest request) {
+        return buildErrorResponse(ex, HttpStatus.NOT_FOUND, request);
+    }
+
 
     @ExceptionHandler({TokenExpiredException.class, InvalidTokenException.class})
     public ResponseEntity<ExceptionResponse> handleTokenExceptions(Exception ex, WebRequest request) {

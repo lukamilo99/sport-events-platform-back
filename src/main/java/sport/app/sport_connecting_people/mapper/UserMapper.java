@@ -1,7 +1,5 @@
 package sport.app.sport_connecting_people.mapper;
 
-import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.stereotype.Component;
 import sport.app.sport_connecting_people.dto.user.response.UserProfileDto;
@@ -13,18 +11,14 @@ import sport.app.sport_connecting_people.entity.User;
 import sport.app.sport_connecting_people.security.model.OAuth2UserInformation;
 import sport.app.sport_connecting_people.security.model.UserPrincipal;
 
-@AllArgsConstructor
 @Component
 public class UserMapper {
-
-    private PasswordEncoder passwordEncoder;
 
     public User createUser(UserRegistrationDto dto) {
         User user = new User();
         user.setEmail(dto.getEmail());
         user.setFirstname(dto.getFirstname());
         user.setLastname(dto.getLastname());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setProvider(AuthenticationProvider.local);
         return user;
     }

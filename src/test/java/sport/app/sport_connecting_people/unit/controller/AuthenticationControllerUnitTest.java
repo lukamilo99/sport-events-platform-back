@@ -1,7 +1,9 @@
-package sport.app.sport_connecting_people.controller.unit;
+package sport.app.sport_connecting_people.unit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -12,13 +14,19 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import sport.app.sport_connecting_people.controller.AuthenticationController;
-import sport.app.sport_connecting_people.controller.config.SecurityPermitAllConfig;
+import sport.app.sport_connecting_people.config.SecurityPermitAllConfig;
+import sport.app.sport_connecting_people.dto.user.request.UserLoginDto;
 import sport.app.sport_connecting_people.dto.user.request.UserRegistrationDto;
 import sport.app.sport_connecting_people.exceptions.user.UserAlreadyExistsException;
 import sport.app.sport_connecting_people.security.filter.JwtAuthenticationFilter;
 import sport.app.sport_connecting_people.service.AuthenticationService;
 
+import java.util.stream.Stream;
+
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -36,8 +44,8 @@ public class AuthenticationControllerUnitTest {
     private AuthenticationService authenticationService;
 
     @Test
-    public void userAlreadyExistsRegisterFail() throws Exception {
-        UserRegistrationDto dto = getValidDto();
+    public void register_WithExistingEmail_ShouldThrowException() throws Exception {
+        UserRegistrationDto dto = getValidRegisterDto();
 
         Mockito.doThrow(UserAlreadyExistsException.class).when(authenticationService).register(any(UserRegistrationDto.class));
 
@@ -46,80 +54,78 @@ public class AuthenticationControllerUnitTest {
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isConflict());
 
-        Mockito.verify(authenticationService, Mockito.times(1)).register(any(UserRegistrationDto.class));
+        verify(authenticationService, Mockito.times(1)).register(any(UserRegistrationDto.class));
     }
 
     @Test
-    public void validDtoRegisterSuccess() throws Exception {
-        UserRegistrationDto dto = getValidDto();
+    public void register_WithValidDto_ShouldReturnOk() throws Exception {
+        UserRegistrationDto dto = getValidRegisterDto();
 
-        Mockito.doNothing().when(authenticationService).register(dto);
+        doNothing().when(authenticationService).register(dto);
 
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
 
-        Mockito.verify(authenticationService, Mockito.times(1)).register(any(UserRegistrationDto.class));
+        verify(authenticationService, Mockito.times(1)).register(eq(dto));
     }
 
-    @Test
-    public void invalidEmailDtoRegisterFail() throws Exception {
-        UserRegistrationDto dto = getInvalidEmailDto();
-
-        Mockito.doNothing().when(authenticationService).register(dto);
-
+    @ParameterizedTest
+    @MethodSource("invalidRegisterDtos")
+    public void register_WithInvalidDto_ShouldReturnBadRequest(UserRegistrationDto dto) throws Exception {
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isBadRequest());
 
-        Mockito.verify(authenticationService, Mockito.times(0)).register(any(UserRegistrationDto.class));
+        verify(authenticationService, Mockito.never()).register(any(UserRegistrationDto.class));
     }
 
     @Test
-    public void invalidPasswordDtoRegisterFail() throws Exception {
-        UserRegistrationDto dto = getInvalidPasswordDto();
+    public void login_WithValidDto_ShouldReturnOk() throws Exception {
+        UserLoginDto dto = getValidLoginDto();
 
-        Mockito.doNothing().when(authenticationService).register(dto);
+        Mockito.when(authenticationService.login(eq(dto))).thenReturn("jwtTest");
 
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("jwtTest"));
+
+        verify(authenticationService, Mockito.times(1)).login(eq(dto));
+    }
+
+    @Test
+    public void login_WithInvalidDto_ShouldReturnBadRequest() throws Exception {
+        UserLoginDto dto = getEmptyFieldLoginDto();
+
+        mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isBadRequest());
 
-        Mockito.verify(authenticationService, Mockito.times(0)).register(any(UserRegistrationDto.class));
+        verify(authenticationService, Mockito.never()).login(any(UserLoginDto.class));
     }
 
-    @Test
-    public void invalidRepeatedPasswordDtoRegisterFail() throws Exception {
-        UserRegistrationDto dto = getInvalidRepeatedPasswordDto();
+    private static Stream<UserRegistrationDto> invalidRegisterDtos() {
+        UserRegistrationDto invalidEmailDto = getValidRegisterDto();
+        invalidEmailDto.setEmail("testgmail.com");
 
-        Mockito.doNothing().when(authenticationService).register(dto);
+        UserRegistrationDto invalidPasswordDto = getValidRegisterDto();
+        invalidPasswordDto.setPassword("asdf1");
 
-        mockMvc.perform(post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isBadRequest());
+        UserRegistrationDto invalidRepeatedPasswordDto = getValidRegisterDto();
+        invalidRepeatedPasswordDto.setRepeatedPassword("Qwerasdf2");
 
-        Mockito.verify(authenticationService, Mockito.times(0)).register(any(UserRegistrationDto.class));
+        UserRegistrationDto emptyFieldDto = getValidRegisterDto();
+        emptyFieldDto.setFirstname("");
+
+        return Stream.of(invalidEmailDto, invalidPasswordDto, invalidRepeatedPasswordDto, emptyFieldDto);
     }
 
-    @Test
-    public void emptyFieldDtoRegisterFail() throws Exception {
-        UserRegistrationDto dto = getEmptyFieldDto();
-
-        Mockito.doNothing().when(authenticationService).register(dto);
-
-        mockMvc.perform(post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isBadRequest());
-
-        Mockito.verify(authenticationService, Mockito.times(0)).register(any(UserRegistrationDto.class));
-    }
-
-    private UserRegistrationDto getValidDto() {
+    private static UserRegistrationDto getValidRegisterDto() {
         UserRegistrationDto dto = new UserRegistrationDto();
         dto.setFirstname("Test");
         dto.setLastname("Test");
@@ -129,28 +135,16 @@ public class AuthenticationControllerUnitTest {
         return dto;
     }
 
-    private UserRegistrationDto getInvalidEmailDto() {
-        UserRegistrationDto dto = getValidDto();
-        dto.setEmail("testgmail.com");
+    private UserLoginDto getValidLoginDto() {
+        UserLoginDto dto = new UserLoginDto();
+        dto.setEmail("test@gmail.com");
+        dto.setPassword("Qwerasdf1");
         return dto;
     }
 
-    private UserRegistrationDto getInvalidPasswordDto() {
-        UserRegistrationDto dto = getValidDto();
-        dto.setPassword("asdf1");
-        dto.setRepeatedPassword("asdf1");
-        return dto;
-    }
-
-    private UserRegistrationDto getInvalidRepeatedPasswordDto() {
-        UserRegistrationDto dto = getValidDto();
-        dto.setRepeatedPassword("Qwerasdf2");
-        return dto;
-    }
-
-    private UserRegistrationDto getEmptyFieldDto() {
-        UserRegistrationDto dto = getValidDto();
-        dto.setFirstname("");
+    private UserLoginDto getEmptyFieldLoginDto() {
+        UserLoginDto dto = getValidLoginDto();
+        dto.setEmail("");
         return dto;
     }
 }
