@@ -11,6 +11,7 @@ This is a RESTful API and part of a full-stack application ([frontend](https://g
 - **OAuth2**: Allows users to sign in/register through Google.
 - **Spring WebFlux**: Asynchronous calls, especially for interacting with the GeoApify API.
 - **GeoApify**: Fetching location information such as map display and address autocomplete.
+- **JUnit, Mockito**: Written a few unit tests for web and service layer - work in progress.
 
 ## Features
 
