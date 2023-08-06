@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "user")
+@Table(name = "\"user\"")
 public class User {
 
     @Id

@@ -15,8 +15,11 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     Optional<User> findById(Long id);
+
     Optional<User> findByEmail(String email);
+
     Boolean existsByEmail(String email);
+
     @Modifying
     @Query("UPDATE User u SET u.isEnabled = :isEnabled WHERE u.id = :userId")
     int updateUserEnabledStatus(@Param("userId") Long userId, @Param("isEnabled") boolean isEnabled);
