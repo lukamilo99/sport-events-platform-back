@@ -27,26 +27,31 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Transactional
+    @Override
     public void updateUser(UserUpdateDto dto) {
         User user = principalServiceImpl.getCurrentUser();
         userRepository.save(userMapper.updateUserData(user, dto));
     }
 
     @Transactional
+    @Override
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
 
     @Transactional
+    @Override
     public void banUser(Long userId) {
         userRepository.updateUserEnabledStatus(userId, false);
     }
 
     @Transactional
+    @Override
     public void unbanUser(Long userId) {
         userRepository.updateUserEnabledStatus(userId, true);
     }
 
+    @Override
     public PaginatedUserProfileDto searchUsers(String name, Pageable pageable) {
         Specification<User> spec = Specification
                 .where(UserSpecification.hasFirstName(name))
@@ -64,6 +69,7 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+    @Override
     public UserProfileDto getPrincipal(UserPrincipal userPrincipal) {
         return userMapper.mapToUserProfile(userPrincipal);
     }

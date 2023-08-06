@@ -4,8 +4,8 @@ import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
-import sport.app.sport_connecting_people.exceptions.jwt.InvalidTokenException;
-import sport.app.sport_connecting_people.exceptions.jwt.TokenExpiredException;
+import sport.app.sport_connecting_people.exceptions.authentication.InvalidTokenException;
+import sport.app.sport_connecting_people.exceptions.authentication.TokenExpiredException;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;

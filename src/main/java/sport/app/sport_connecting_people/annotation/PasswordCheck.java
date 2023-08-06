@@ -11,7 +11,10 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = PasswordValidator.class)
 @Documented
 public @interface PasswordCheck {
+
     String message() default "Wrong password format";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

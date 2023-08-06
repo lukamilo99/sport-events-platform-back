@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import sport.app.sport_connecting_people.controller.EventController;
-import sport.app.sport_connecting_people.config.SecurityPermitAllConfig;
+import sport.app.sport_connecting_people.unit.config.SecurityPermitAllConfig;
 import sport.app.sport_connecting_people.dto.event.request.EventUpsertDto;
 import sport.app.sport_connecting_people.dto.event.response.EventDetailsDto;
 import sport.app.sport_connecting_people.dto.location.LocationDto;

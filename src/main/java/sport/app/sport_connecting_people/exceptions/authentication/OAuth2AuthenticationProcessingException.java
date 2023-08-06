@@ -1,4 +1,4 @@
-package sport.app.sport_connecting_people.exceptions.user;
+package sport.app.sport_connecting_people.exceptions.authentication;
 
 public class OAuth2AuthenticationProcessingException extends RuntimeException {
 

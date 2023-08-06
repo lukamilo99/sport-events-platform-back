@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import sport.app.sport_connecting_people.controller.AuthenticationController;
-import sport.app.sport_connecting_people.config.SecurityPermitAllConfig;
+import sport.app.sport_connecting_people.unit.config.SecurityPermitAllConfig;
 import sport.app.sport_connecting_people.dto.user.request.UserLoginDto;
 import sport.app.sport_connecting_people.dto.user.request.UserRegistrationDto;
 import sport.app.sport_connecting_people.exceptions.user.UserAlreadyExistsException;

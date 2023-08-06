@@ -14,7 +14,7 @@ import sport.app.sport_connecting_people.security.model.UserPrincipal;
 @Component
 public class UserMapper {
 
-    public User createUser(UserRegistrationDto dto) {
+    public User mapToUser(UserRegistrationDto dto) {
         User user = new User();
         user.setEmail(dto.getEmail());
         user.setFirstname(dto.getFirstname());
@@ -30,7 +30,7 @@ public class UserMapper {
         return user;
     }
 
-    public User createOAuthUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInformation oAuth2UserInfo) {
+    public User mapToUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInformation oAuth2UserInfo) {
         User user = new User();
         String[] fullName = oAuth2UserInfo.getName().split(" ");
         String firstname = fullName[0];

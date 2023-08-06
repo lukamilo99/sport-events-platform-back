@@ -23,6 +23,7 @@ public class GeoServiceImpl implements GeoService {
         this.locationMapper = locationMapper;
     }
 
+    @Override
     public Mono<List<LocationDto>> autocompleteLocation(String query) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -35,6 +36,7 @@ public class GeoServiceImpl implements GeoService {
                 .map(response -> locationMapper.createLocationResponseList(response));
     }
 
+    @Override
     public Mono<LocationDto> getLocation(double latitude, double longitude) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder

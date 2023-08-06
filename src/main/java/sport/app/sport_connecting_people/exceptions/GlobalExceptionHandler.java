@@ -6,14 +6,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import sport.app.sport_connecting_people.exceptions.authentication.OAuth2AuthenticationProcessingException;
 import sport.app.sport_connecting_people.exceptions.event.EventFullException;
 import sport.app.sport_connecting_people.exceptions.event.EventNotFoundException;
-import sport.app.sport_connecting_people.exceptions.jwt.InvalidTokenException;
-import sport.app.sport_connecting_people.exceptions.jwt.TokenExpiredException;
+import sport.app.sport_connecting_people.exceptions.authentication.InvalidTokenException;
+import sport.app.sport_connecting_people.exceptions.authentication.TokenExpiredException;
 import sport.app.sport_connecting_people.exceptions.user.AccessDeniedException;
 import sport.app.sport_connecting_people.exceptions.user.UserAlreadyExistsException;
 import sport.app.sport_connecting_people.exceptions.user.UserBannedException;
 import sport.app.sport_connecting_people.exceptions.user.UserNotFoundException;
+import org.springframework.security.core.AuthenticationException;
 
 import java.time.LocalDateTime;
 
@@ -30,9 +32,9 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex, HttpStatus.NOT_FOUND, request);
     }
 
-
-    @ExceptionHandler({TokenExpiredException.class, InvalidTokenException.class})
-    public ResponseEntity<ExceptionResponse> handleTokenExceptions(Exception ex, WebRequest request) {
+    @ExceptionHandler({TokenExpiredException.class, InvalidTokenException.class,
+            AuthenticationException.class, OAuth2AuthenticationProcessingException.class})
+    public ResponseEntity<ExceptionResponse> handleAuthorizationExceptions(Exception ex, WebRequest request) {
         return buildErrorResponse(ex, HttpStatus.UNAUTHORIZED, request);
     }
 
