@@ -22,13 +22,13 @@ public interface EventService {
 
     PaginatedEventDto searchEvents(String search, String city, String sport, String day, Pageable pageable);
 
-    PaginatedMyEventDto searchEventsCreatedByUser(Pageable pageable);
+    PaginatedMyEventDto searchEventsCreatedByUser(Pageable pageable, boolean includePastEvents);
 
-    PaginatedMyEventDto searchEventsParticipatedByUser(Pageable pageable);
+    PaginatedMyEventDto searchEventsParticipatedByUser(Pageable pageable, boolean includePastEvents);
 
     List<EventDto> getLatestEvents();
 
     EventDetailsDto getEventDetails(Long eventId);
 
-    EventDto getEventForUpdate(Long eventId);
+    EventDto getEvent(Long eventId);
 }

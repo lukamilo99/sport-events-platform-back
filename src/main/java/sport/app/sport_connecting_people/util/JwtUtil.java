@@ -36,7 +36,7 @@ public class JwtUtil {
     public String generateToken(Long userId) {
         return Jwts.builder()
                 .setSubject(userId.toString())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .setExpiration(new Date(System.currentTimeMillis() + 36000000))
                 .signWith(SignatureAlgorithm.RS256, privateKey)
                 .compact();
     }

@@ -24,6 +24,8 @@ import sport.app.sport_connecting_people.service.EventService;
 import sport.app.sport_connecting_people.service.PrincipalService;
 import sport.app.sport_connecting_people.specification.EventSpecification;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -60,6 +62,15 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public EventDto getEvent(Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
+        EventDto dto = eventMapper.mapToEventDto(event);
+        dto.setId(null);
+        return dto;
+    }
+
+    @Override
     public EventDetailsDto getEventDetails(Long eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
@@ -72,10 +83,12 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
         User user = principalService.getCurrentUser();
-        if(!isEventFull(event)) {
+        if(isEventFull(event)) {
+            throw new EventFullException("Event " + event.getName() + " is full");
+        }
+        else {
             event.addParticipant(user);
         }
-        else throw new EventFullException("Event " + event.getName() + " is full");
     }
 
     @Transactional
@@ -123,17 +136,29 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public PaginatedMyEventDto searchEventsCreatedByUser(Pageable pageable) {
+    public PaginatedMyEventDto searchEventsCreatedByUser(Pageable pageable, boolean includePastEvents) {
         Long userId = principalService.getCurrentUserId();
-        Page<Event> eventPage = eventRepository.findByEventCreatorId(userId, pageable);
+        Page<Event> eventPage;
+
+        if (includePastEvents) {
+            eventPage = eventRepository.findByEventCreatorId(userId, pageable);
+        } else {
+            eventPage = eventRepository.findByEventCreatorIdAndDateAfter(userId, LocalDateTime.now(), pageable);
+        }
 
         return getPaginatedMyEventDto(eventPage);
     }
 
     @Override
-    public PaginatedMyEventDto searchEventsParticipatedByUser(Pageable pageable) {
+    public PaginatedMyEventDto searchEventsParticipatedByUser(Pageable pageable, boolean includePastEvents) {
         Long userId = principalService.getCurrentUserId();
-        Page<Event> eventPage = eventRepository.findByParticipantsId(userId, pageable);
+        Page<Event> eventPage;
+
+        if (includePastEvents) {
+            eventPage = eventRepository.findByParticipantsId(userId, pageable);
+        } else {
+            eventPage = eventRepository.findByParticipantsIdAndDateAfter(userId, LocalDateTime.now(), pageable);
+        }
 
         return getPaginatedMyEventDto(eventPage);
     }
@@ -150,15 +175,6 @@ public class EventServiceImpl implements EventService {
         } else {
             return List.of();
         }
-    }
-
-    @Override
-    public EventDto getEventForUpdate(Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
-        EventDto dto = eventMapper.mapToEventDto(event);
-        dto.setId(null);
-        return dto;
     }
 
     private PaginatedMyEventDto getPaginatedMyEventDto(Page<Event> eventPage) {
@@ -191,7 +207,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private boolean isEventFull(Event event) {
-        return getAvailableSpots(event) > 0;
+        return getAvailableSpots(event) == 0;
     }
 
     private int getAvailableSpots(Event event) {

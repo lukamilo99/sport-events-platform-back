@@ -77,15 +77,21 @@ public class EventController {
     }
 
     @GetMapping("/user-creator")
-    public ResponseEntity<PaginatedMyEventDto> searchUserCreator(@RequestParam(defaultValue = "0") int page) {
+    public ResponseEntity<PaginatedMyEventDto> searchUserCreator(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "false") boolean includePastEvents) {
+
         Pageable pageable = PageRequest.of(page, 6);
-        return new ResponseEntity<>(eventService.searchEventsCreatedByUser(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.searchEventsCreatedByUser(pageable, includePastEvents), HttpStatus.OK);
     }
 
     @GetMapping("/user-participant")
-    public ResponseEntity<PaginatedMyEventDto> searchUserParticipant(@RequestParam(defaultValue = "0") int page) {
+    public ResponseEntity<PaginatedMyEventDto> searchUserParticipant(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam boolean includePastEvents) {
+
         Pageable pageable = PageRequest.of(page, 6);
-        return new ResponseEntity<>(eventService.searchEventsParticipatedByUser(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.searchEventsParticipatedByUser(pageable, includePastEvents), HttpStatus.OK);
     }
 
     @GetMapping("/latest")
@@ -95,6 +101,6 @@ public class EventController {
 
     @GetMapping("/for-update/{eventId}")
     public ResponseEntity<EventDto> getEventForUpdate(@PathVariable Long eventId) {
-        return new ResponseEntity<>(eventService.getEventForUpdate(eventId), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.getEvent(eventId), HttpStatus.OK);
     }
 }

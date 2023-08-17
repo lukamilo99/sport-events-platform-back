@@ -56,6 +56,7 @@ public class EventMapper {
         MyEventDto dto = new MyEventDto();
         dto.setId(event.getId());
         dto.setName(event.getName());
+        dto.setEventPast(event.getDate().isBefore(LocalDateTime.now()));
         return dto;
     }
 
