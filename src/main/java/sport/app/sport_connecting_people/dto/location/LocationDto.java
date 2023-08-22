@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 public class LocationDto {
 
+    private String city;
     private String formattedAddress;
     private List<Double> coordinates;
 }

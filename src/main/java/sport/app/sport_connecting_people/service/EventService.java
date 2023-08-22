@@ -26,7 +26,7 @@ public interface EventService {
 
     PaginatedMyEventDto searchEventsParticipatedByUser(Pageable pageable, boolean includePastEvents);
 
-    List<EventDto> getLatestEvents();
+    List<EventDto> getLatestEvents(String city, Pageable pageable);
 
     EventDetailsDto getEventDetails(Long eventId);
 

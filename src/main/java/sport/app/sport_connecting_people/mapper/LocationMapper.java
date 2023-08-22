@@ -40,10 +40,11 @@ public class LocationMapper {
             return null;
         }
 
+        String city = properties.get("city").textValue();
         String formatted = properties.get("formatted").textValue();
         double lon = properties.get("lon").asDouble();
         double lat = properties.get("lat").asDouble();
 
-        return new LocationDto(formatted, List.of(lat, lon));
+        return new LocationDto(city, formatted, List.of(lat, lon));
     }
 }

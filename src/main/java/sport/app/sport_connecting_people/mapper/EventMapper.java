@@ -69,6 +69,7 @@ public class EventMapper {
     private void mapCommonEventAttributes(Event event, EventDto dto) {
         dto.setId(event.getId());
         dto.setLocation(new LocationDto(
+                event.getCity(),
                 event.getStreetName() + ", " + event.getCity(),
                 List.of(event.getCoordinatesLat(),
                         event.getCoordinatesLon())

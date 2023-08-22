@@ -3,7 +3,6 @@ package sport.app.sport_connecting_people.service.implementation;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ import sport.app.sport_connecting_people.service.PrincipalService;
 import sport.app.sport_connecting_people.specification.EventSpecification;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -83,6 +81,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
         User user = principalService.getCurrentUser();
+
         if(isEventFull(event)) {
             throw new EventFullException("Event " + event.getName() + " is full");
         }
@@ -131,7 +130,6 @@ public class EventServiceImpl implements EventService {
         PaginatedEventDto response = new PaginatedEventDto();
         response.setEvents(eventDtos);
         response.setTotalCount(eventPage.getTotalElements());
-
         return response;
     }
 
@@ -145,7 +143,6 @@ public class EventServiceImpl implements EventService {
         } else {
             eventPage = eventRepository.findByEventCreatorIdAndDateAfter(userId, LocalDateTime.now(), pageable);
         }
-
         return getPaginatedMyEventDto(eventPage);
     }
 
@@ -159,14 +156,15 @@ public class EventServiceImpl implements EventService {
         } else {
             eventPage = eventRepository.findByParticipantsIdAndDateAfter(userId, LocalDateTime.now(), pageable);
         }
-
         return getPaginatedMyEventDto(eventPage);
     }
 
     @Override
-    public List<EventDto> getLatestEvents() {
-        Pageable topSix = PageRequest.of(0, 6);
-        Page<Event> eventPage = eventRepository.findAllByOrderByCreationDateDesc(topSix);
+    public List<EventDto> getLatestEvents(String city, Pageable pageable) {
+        Specification<Event> spec = Specification
+                .where(EventSpecification.hasCity(city));
+
+        Page<Event> eventPage = eventRepository.findAll(spec, pageable);
 
         if(!eventPage.isEmpty()) {
             return eventPage.getContent().stream()

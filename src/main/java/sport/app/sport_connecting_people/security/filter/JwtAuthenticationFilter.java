@@ -34,11 +34,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request){
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         return request.getRequestURI().contains("/auth/login") ||
                 request.getRequestURI().contains("/auth/register") ||
                 request.getRequestURI().contains("/event/latest") ||
-                request.getRequestURI().endsWith("/event");
+                request.getRequestURI().contains("/event/search-events") ||
+                request.getRequestURI().contains("/geo/address");
     }
 
     private String getToken(HttpServletRequest request) {

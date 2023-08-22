@@ -29,6 +29,11 @@ public class EventController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventDto> getEvent(@PathVariable Long eventId) {
+        return new ResponseEntity<>(eventService.getEvent(eventId), HttpStatus.OK);
+    }
+
     @PutMapping("/update/{eventId}")
     public ResponseEntity<Void> updateEvent(@Valid @RequestBody EventUpsertDto dto, @PathVariable Long eventId) {
         eventService.updateEvent(dto, eventId);
@@ -95,12 +100,8 @@ public class EventController {
     }
 
     @GetMapping("/latest")
-    public ResponseEntity<List<EventDto>> getLatestEvents() {
-        return new ResponseEntity<>(eventService.getLatestEvents(), HttpStatus.OK);
-    }
-
-    @GetMapping("/for-update/{eventId}")
-    public ResponseEntity<EventDto> getEventForUpdate(@PathVariable Long eventId) {
-        return new ResponseEntity<>(eventService.getEvent(eventId), HttpStatus.OK);
+    public ResponseEntity<List<EventDto>> getLatestEvents(@RequestParam(required = false) String city) {
+        Pageable pageable = PageRequest.of(0, 6);
+        return new ResponseEntity<>(eventService.getLatestEvents(city, pageable), HttpStatus.OK);
     }
 }

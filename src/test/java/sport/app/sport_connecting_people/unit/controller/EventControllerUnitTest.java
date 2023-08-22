@@ -206,7 +206,7 @@ public class EventControllerUnitTest {
         dto.setName("Event");
         dto.setSport("Sport");
         dto.setCapacity(10);
-        dto.setLocation(new LocationDto("Address", List.of(0.5, 0.5)));
+        dto.setLocation(new LocationDto("City", "Address", List.of(0.5, 0.5)));
         dto.setDate(LocalDateTime.now());
         return dto;
     }
