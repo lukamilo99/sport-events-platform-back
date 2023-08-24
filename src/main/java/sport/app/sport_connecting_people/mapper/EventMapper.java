@@ -6,7 +6,7 @@ import sport.app.sport_connecting_people.dto.event.request.EventUpsertDto;
 import sport.app.sport_connecting_people.dto.event.response.EventDetailsDto;
 import sport.app.sport_connecting_people.dto.event.response.EventDto;
 import sport.app.sport_connecting_people.dto.event.response.MyEventDto;
-import sport.app.sport_connecting_people.dto.location.LocationDto;
+import sport.app.sport_connecting_people.dto.location.response.LocationResponseDto;
 import sport.app.sport_connecting_people.entity.Event;
 
 import java.time.LocalDateTime;
@@ -68,7 +68,7 @@ public class EventMapper {
 
     private void mapCommonEventAttributes(Event event, EventDto dto) {
         dto.setId(event.getId());
-        dto.setLocation(new LocationDto(
+        dto.setLocation(new LocationResponseDto(
                 event.getCity(),
                 event.getStreetName() + ", " + event.getCity(),
                 List.of(event.getCoordinatesLat(),
@@ -80,9 +80,9 @@ public class EventMapper {
         dto.setCapacity(event.getCapacity());
     }
 
-    private Map<String, String> formatLocation(LocationDto locationDto) {
+    private Map<String, String> formatLocation(LocationResponseDto locationResponseDto) {
         Map<String, String> locationInfo = new HashMap<>();
-        String[] locationParts = locationDto.getFormattedAddress().split(",");
+        String[] locationParts = locationResponseDto.getFormattedAddress().split(",");
         if (locationParts.length == 2) {
             locationInfo.put("streetName", "Unknown");
             locationInfo.put("city", locationParts[0].replaceAll("\\d", "").trim());

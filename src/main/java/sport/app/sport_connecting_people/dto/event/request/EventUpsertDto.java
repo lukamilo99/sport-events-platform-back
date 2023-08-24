@@ -1,10 +1,9 @@
 package sport.app.sport_connecting_people.dto.event.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import sport.app.sport_connecting_people.dto.location.LocationDto;
+import sport.app.sport_connecting_people.dto.location.response.LocationResponseDto;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +21,7 @@ public class EventUpsertDto {
     @NotBlank
     private String sport;
     @NotNull
-    private LocationDto location;
+    private LocationResponseDto location;
     @NotNull
     private LocalDateTime date;
 }

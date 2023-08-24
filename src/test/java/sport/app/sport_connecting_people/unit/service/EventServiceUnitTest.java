@@ -21,7 +21,7 @@ import sport.app.sport_connecting_people.mapper.EventMapper;
 import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.EventRepository;
 import sport.app.sport_connecting_people.repository.UserRepository;
-import sport.app.sport_connecting_people.service.PrincipalService;
+import sport.app.sport_connecting_people.service.specification.PrincipalService;
 import sport.app.sport_connecting_people.service.implementation.EventServiceImpl;
 
 import java.util.Collections;

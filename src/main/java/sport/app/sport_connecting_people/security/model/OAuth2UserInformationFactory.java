@@ -1,6 +1,6 @@
 package sport.app.sport_connecting_people.security.model;
 
-import sport.app.sport_connecting_people.entity.AuthenticationProvider;
+import sport.app.sport_connecting_people.entity.enums.AuthenticationProvider;
 
 import java.util.Map;
 

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sport.app.sport_connecting_people.dto.user.request.UserLoginDto;
@@ -16,9 +15,9 @@ import sport.app.sport_connecting_people.exceptions.user.UserAlreadyExistsExcept
 import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.RoleRepository;
 import sport.app.sport_connecting_people.repository.UserRepository;
-import sport.app.sport_connecting_people.service.PrincipalService;
+import sport.app.sport_connecting_people.service.specification.PrincipalService;
 import sport.app.sport_connecting_people.util.JwtUtil;
-import sport.app.sport_connecting_people.service.AuthenticationService;
+import sport.app.sport_connecting_people.service.specification.AuthenticationService;
 import org.springframework.security.core.AuthenticationException;
 
 @AllArgsConstructor

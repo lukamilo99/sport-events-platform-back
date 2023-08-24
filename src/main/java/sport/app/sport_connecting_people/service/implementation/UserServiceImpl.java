@@ -7,29 +7,35 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import sport.app.sport_connecting_people.dto.user.response.PaginatedUserProfileDto;
+import sport.app.sport_connecting_people.dto.user.response.PaginatedUserResponseDto;
 import sport.app.sport_connecting_people.dto.user.response.UserProfileDto;
 import sport.app.sport_connecting_people.dto.user.request.UserUpdateDto;
+import sport.app.sport_connecting_people.dto.user.response.UserResponseDto;
 import sport.app.sport_connecting_people.entity.User;
 import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.UserRepository;
 import sport.app.sport_connecting_people.security.model.UserPrincipal;
-import sport.app.sport_connecting_people.service.UserService;
+import sport.app.sport_connecting_people.service.specification.FriendshipService;
+import sport.app.sport_connecting_people.service.specification.PrincipalService;
+import sport.app.sport_connecting_people.service.specification.UserService;
 import sport.app.sport_connecting_people.specification.UserSpecification;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
-    private PrincipalServiceImpl principalServiceImpl;
+    private PrincipalService principalService;
+    private FriendshipService friendshipService;
     private UserMapper userMapper;
 
     @Transactional
     @Override
     public void updateUser(UserUpdateDto dto) {
-        User user = principalServiceImpl.getCurrentUser();
+        User user = principalService.getCurrentUser();
         userRepository.save(userMapper.updateUserData(user, dto));
     }
 
@@ -52,7 +58,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PaginatedUserProfileDto searchUsers(String name, Pageable pageable) {
+    public PaginatedUserResponseDto searchUsers(String name, Pageable pageable) {
+        Specification<User> spec = Specification
+                .where(UserSpecification.hasFirstName(name))
+                .or(UserSpecification.hasLastName(name));
+        Page<User> users = userRepository.findAll(spec, pageable);
+
+        User currentUser = principalService.getCurrentUser();
+        List<UserResponseDto> userDtos = users.getContent().stream().map(user -> {
+            UserResponseDto dto = userMapper.mapToUserResponseDto(user);
+            dto.setStatus(friendshipService.getFriendshipStatus(currentUser.getId(), user.getId()));
+            return dto;
+        }).collect(Collectors.toList());
+
+        PaginatedUserResponseDto response = new PaginatedUserResponseDto();
+        response.setUsers(userDtos);
+        response.setTotalCount(users.getTotalElements());
+        return response;
+    }
+
+    @Override
+    public PaginatedUserProfileDto searchUsersDetails(String name, Pageable pageable) {
         Specification<User> spec = Specification
                 .where(UserSpecification.hasFirstName(name))
                 .or(UserSpecification.hasLastName(name));

@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import sport.app.sport_connecting_people.entity.AuthenticationProvider;
+import sport.app.sport_connecting_people.entity.enums.AuthenticationProvider;
 import sport.app.sport_connecting_people.entity.User;
 import sport.app.sport_connecting_people.exceptions.authentication.OAuth2AuthenticationProcessingException;
 import sport.app.sport_connecting_people.mapper.UserMapper;

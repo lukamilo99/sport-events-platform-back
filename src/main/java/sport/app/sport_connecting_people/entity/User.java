@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import sport.app.sport_connecting_people.entity.enums.AuthenticationProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "eventCreator")
     private List<Event> eventsCreated;
 
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "participants")
     private List<Event> eventsParticipatedIn;
 
     public User() {

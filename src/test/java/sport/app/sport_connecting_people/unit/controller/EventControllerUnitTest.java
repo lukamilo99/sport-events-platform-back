@@ -18,11 +18,11 @@ import sport.app.sport_connecting_people.controller.EventController;
 import sport.app.sport_connecting_people.unit.config.SecurityPermitAllConfig;
 import sport.app.sport_connecting_people.dto.event.request.EventUpsertDto;
 import sport.app.sport_connecting_people.dto.event.response.EventDetailsDto;
-import sport.app.sport_connecting_people.dto.location.LocationDto;
+import sport.app.sport_connecting_people.dto.location.response.LocationResponseDto;
 import sport.app.sport_connecting_people.exceptions.event.EventFullException;
 import sport.app.sport_connecting_people.exceptions.event.EventNotFoundException;
 import sport.app.sport_connecting_people.security.filter.JwtAuthenticationFilter;
-import sport.app.sport_connecting_people.service.EventService;
+import sport.app.sport_connecting_people.service.specification.EventService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -206,7 +206,7 @@ public class EventControllerUnitTest {
         dto.setName("Event");
         dto.setSport("Sport");
         dto.setCapacity(10);
-        dto.setLocation(new LocationDto("City", "Address", List.of(0.5, 0.5)));
+        dto.setLocation(new LocationResponseDto("City", "Address", List.of(0.5, 0.5)));
         dto.setDate(LocalDateTime.now());
         return dto;
     }

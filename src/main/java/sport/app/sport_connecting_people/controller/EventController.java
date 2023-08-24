@@ -12,7 +12,7 @@ import sport.app.sport_connecting_people.dto.event.response.EventDetailsDto;
 import sport.app.sport_connecting_people.dto.event.response.EventDto;
 import sport.app.sport_connecting_people.dto.event.response.PaginatedEventDto;
 import sport.app.sport_connecting_people.dto.event.response.PaginatedMyEventDto;
-import sport.app.sport_connecting_people.service.EventService;
+import sport.app.sport_connecting_people.service.specification.EventService;
 
 import java.util.List;
 

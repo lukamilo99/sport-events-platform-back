@@ -1,4 +1,4 @@
-package sport.app.sport_connecting_people.service;
+package sport.app.sport_connecting_people.service.specification;
 
 import org.springframework.data.domain.Pageable;
 import sport.app.sport_connecting_people.dto.event.request.EventUpsertDto;

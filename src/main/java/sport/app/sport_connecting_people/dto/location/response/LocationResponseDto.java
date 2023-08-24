@@ -1,4 +1,4 @@
-package sport.app.sport_connecting_people.dto.location;
+package sport.app.sport_connecting_people.dto.location.response;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 @EqualsAndHashCode
 @Getter
 @Setter
-public class LocationDto {
+public class LocationResponseDto {
 
     private String city;
     private String formattedAddress;

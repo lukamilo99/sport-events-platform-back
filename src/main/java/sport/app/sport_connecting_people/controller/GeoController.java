@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-import sport.app.sport_connecting_people.dto.location.LocationDto;
-import sport.app.sport_connecting_people.service.GeoService;
+import sport.app.sport_connecting_people.dto.location.response.LocationResponseDto;
+import sport.app.sport_connecting_people.service.specification.GeoService;
 
 import java.util.List;
 
@@ -20,12 +20,12 @@ public class GeoController {
     private GeoService geoService;
 
     @GetMapping("/autocomplete")
-    public ResponseEntity<Mono<List<LocationDto>>> autocompleteLocation(@RequestParam String query) {
+    public ResponseEntity<Mono<List<LocationResponseDto>>> autocompleteLocation(@RequestParam String query) {
         return ResponseEntity.ok(geoService.autocompleteLocation(query));
     }
 
     @GetMapping("/address")
-    public ResponseEntity<Mono<LocationDto>> getLocation(@RequestParam double lat, @RequestParam double lon) {
+    public ResponseEntity<Mono<LocationResponseDto>> getLocation(@RequestParam double lat, @RequestParam double lon) {
         return ResponseEntity.ok(geoService.getLocation(lat, lon));
     }
 }

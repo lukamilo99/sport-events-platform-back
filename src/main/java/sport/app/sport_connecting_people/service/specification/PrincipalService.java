@@ -1,4 +1,4 @@
-package sport.app.sport_connecting_people.service;
+package sport.app.sport_connecting_people.service.specification;
 
 import org.springframework.security.core.Authentication;
 import sport.app.sport_connecting_people.entity.User;

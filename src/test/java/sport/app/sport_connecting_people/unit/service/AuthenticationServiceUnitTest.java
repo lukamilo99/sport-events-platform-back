@@ -17,7 +17,7 @@ import sport.app.sport_connecting_people.exceptions.user.UserAlreadyExistsExcept
 import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.RoleRepository;
 import sport.app.sport_connecting_people.repository.UserRepository;
-import sport.app.sport_connecting_people.service.PrincipalService;
+import sport.app.sport_connecting_people.service.specification.PrincipalService;
 import sport.app.sport_connecting_people.service.implementation.AuthenticationServiceImpl;
 import sport.app.sport_connecting_people.util.JwtUtil;
 

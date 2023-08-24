@@ -9,7 +9,7 @@ import sport.app.sport_connecting_people.exceptions.authentication.CustomAuthent
 import sport.app.sport_connecting_people.exceptions.user.UserNotFoundException;
 import sport.app.sport_connecting_people.repository.UserRepository;
 import sport.app.sport_connecting_people.security.model.UserPrincipal;
-import sport.app.sport_connecting_people.service.PrincipalService;
+import sport.app.sport_connecting_people.service.specification.PrincipalService;
 
 @AllArgsConstructor
 @Service

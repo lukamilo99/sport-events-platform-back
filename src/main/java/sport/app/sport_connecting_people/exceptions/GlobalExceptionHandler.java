@@ -50,6 +50,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleGenericException(Exception ex, WebRequest request) {
+        ex.printStackTrace();
         return buildErrorResponse(ex, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 

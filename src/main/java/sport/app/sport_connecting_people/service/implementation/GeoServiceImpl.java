@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import sport.app.sport_connecting_people.dto.location.LocationDto;
+import sport.app.sport_connecting_people.dto.location.response.LocationResponseDto;
 import sport.app.sport_connecting_people.mapper.LocationMapper;
-import sport.app.sport_connecting_people.service.GeoService;
+import sport.app.sport_connecting_people.service.specification.GeoService;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class GeoServiceImpl implements GeoService {
     }
 
     @Override
-    public Mono<List<LocationDto>> autocompleteLocation(String query) {
+    public Mono<List<LocationResponseDto>> autocompleteLocation(String query) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/v1/geocode/autocomplete")
@@ -37,7 +37,7 @@ public class GeoServiceImpl implements GeoService {
     }
 
     @Override
-    public Mono<LocationDto> getLocation(double latitude, double longitude) {
+    public Mono<LocationResponseDto> getLocation(double latitude, double longitude) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/v1/geocode/reverse")

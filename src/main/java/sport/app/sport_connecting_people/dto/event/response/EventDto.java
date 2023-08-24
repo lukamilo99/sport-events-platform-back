@@ -1,11 +1,9 @@
 package sport.app.sport_connecting_people.dto.event.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import sport.app.sport_connecting_people.dto.location.LocationDto;
+import sport.app.sport_connecting_people.dto.location.response.LocationResponseDto;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +18,6 @@ public class EventDto {
     private String name;
     private Integer capacity;
     private String sport;
-    private LocationDto location;
+    private LocationResponseDto location;
     private LocalDateTime date;
 }

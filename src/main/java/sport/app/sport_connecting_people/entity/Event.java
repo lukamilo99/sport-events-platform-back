@@ -51,11 +51,11 @@ public class Event {
     @NotNull
     private Double coordinatesLon;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eventCreator", referencedColumnName = "id")
     private User eventCreator;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "event_user",
     joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "id"))

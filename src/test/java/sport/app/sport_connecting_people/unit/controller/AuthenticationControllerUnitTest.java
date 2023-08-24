@@ -19,7 +19,7 @@ import sport.app.sport_connecting_people.dto.user.request.UserLoginDto;
 import sport.app.sport_connecting_people.dto.user.request.UserRegistrationDto;
 import sport.app.sport_connecting_people.exceptions.user.UserAlreadyExistsException;
 import sport.app.sport_connecting_people.security.filter.JwtAuthenticationFilter;
-import sport.app.sport_connecting_people.service.AuthenticationService;
+import sport.app.sport_connecting_people.service.specification.AuthenticationService;
 
 import java.util.stream.Stream;
 

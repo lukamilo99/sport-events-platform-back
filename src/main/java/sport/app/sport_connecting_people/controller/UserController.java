@@ -9,10 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sport.app.sport_connecting_people.dto.user.response.PaginatedUserProfileDto;
+import sport.app.sport_connecting_people.dto.user.response.PaginatedUserResponseDto;
 import sport.app.sport_connecting_people.dto.user.response.UserProfileDto;
 import sport.app.sport_connecting_people.dto.user.request.UserUpdateDto;
 import sport.app.sport_connecting_people.security.model.UserPrincipal;
-import sport.app.sport_connecting_people.service.UserService;
+import sport.app.sport_connecting_people.service.specification.UserService;
 
 @AllArgsConstructor
 @RequestMapping("/user")
@@ -45,9 +46,16 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/search-users")
-    public ResponseEntity<PaginatedUserProfileDto> searchUsers(@RequestParam(required = false) String name,
+    @GetMapping("/private/search-users")
+    public ResponseEntity<PaginatedUserProfileDto> searchUsersDetails(@RequestParam(required = false) String name,
                                                                @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 6);
+        return new ResponseEntity<>(userService.searchUsersDetails(name, pageable), HttpStatus.OK);
+    }
+
+    @GetMapping("/public/search-users")
+    public ResponseEntity<PaginatedUserResponseDto> searchUsers(@RequestParam(required = false) String name,
+                                                                @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 6);
         return new ResponseEntity<>(userService.searchUsers(name, pageable), HttpStatus.OK);
     }

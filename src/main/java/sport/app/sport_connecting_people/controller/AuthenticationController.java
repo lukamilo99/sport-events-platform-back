@@ -1,6 +1,5 @@
 package sport.app.sport_connecting_people.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sport.app.sport_connecting_people.dto.user.request.UserLoginDto;
 import sport.app.sport_connecting_people.dto.user.request.UserRegistrationDto;
-import sport.app.sport_connecting_people.service.AuthenticationService;
+import sport.app.sport_connecting_people.service.specification.AuthenticationService;
 
 @AllArgsConstructor
 @RequestMapping("/auth")

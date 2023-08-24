@@ -48,7 +48,7 @@ public class SecurityConfig {
                             "/user/ban/**",
                             "/user/unban/**",
                             "/user/delete/**",
-                            "/user/search-users")
+                            "/private/search-users")
                     .hasAuthority("ADMIN")
                     .anyRequest().authenticated()
                     .and()

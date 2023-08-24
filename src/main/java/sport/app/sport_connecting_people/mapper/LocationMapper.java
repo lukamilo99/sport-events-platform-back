@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import sport.app.sport_connecting_people.dto.location.LocationDto;
+import sport.app.sport_connecting_people.dto.location.response.LocationResponseDto;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +16,7 @@ public class LocationMapper {
 
     private ObjectMapper objectMapper;
 
-    public List<LocationDto> createLocationResponseList(Object response) {
+    public List<LocationResponseDto> createLocationResponseList(Object response) {
         JsonNode rootNode = objectMapper.convertValue(response, JsonNode.class);
         JsonNode features = rootNode.get("features");
 
@@ -24,17 +24,17 @@ public class LocationMapper {
             return Collections.emptyList();
         }
 
-        List<LocationDto> responseList = new ArrayList<>();
+        List<LocationResponseDto> responseList = new ArrayList<>();
         for (JsonNode feature : features) {
-            LocationDto locationDto = extractLocationResponseFromFeature(feature);
-            if (locationDto != null) {
-                responseList.add(locationDto);
+            LocationResponseDto locationResponseDto = extractLocationResponseFromFeature(feature);
+            if (locationResponseDto != null) {
+                responseList.add(locationResponseDto);
             }
         }
         return responseList;
     }
 
-    private LocationDto extractLocationResponseFromFeature(JsonNode featureNode) {
+    private LocationResponseDto extractLocationResponseFromFeature(JsonNode featureNode) {
         JsonNode properties = featureNode.get("properties");
         if (properties == null) {
             return null;
@@ -45,6 +45,6 @@ public class LocationMapper {
         double lon = properties.get("lon").asDouble();
         double lat = properties.get("lat").asDouble();
 
-        return new LocationDto(city, formatted, List.of(lat, lon));
+        return new LocationResponseDto(city, formatted, List.of(lat, lon));
     }
 }
