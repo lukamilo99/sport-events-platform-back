@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sport.app.sport_connecting_people.dto.user.response.PaginatedUserResponseDto;
+import sport.app.sport_connecting_people.service.implementation.facade.UserInteractionFacade;
 import sport.app.sport_connecting_people.service.specification.FriendshipService;
 
 @AllArgsConstructor
@@ -15,17 +16,19 @@ import sport.app.sport_connecting_people.service.specification.FriendshipService
 public class FriendshipController {
 
     private FriendshipService friendshipService;
+    private UserInteractionFacade userInteractionFacade;
 
     @PostMapping("/create/{responderId}")
     public ResponseEntity<Void> createFriendship(@PathVariable Long responderId) {
-        friendshipService.createFriendship(responderId);
+        userInteractionFacade.sendFriendRequest(responderId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/user-friends")
-    public ResponseEntity<PaginatedUserResponseDto> getUserFriends(@RequestParam(defaultValue = "0") int page) {
+    public ResponseEntity<PaginatedUserResponseDto> getUserFriends(@RequestParam(defaultValue = "0") int page,
+                                                                   @RequestParam(required = false) String name) {
         Pageable pageable = PageRequest.of(page, 6);
-        return new ResponseEntity<>(friendshipService.getUserFriends(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(friendshipService.getUserFriends(name, pageable), HttpStatus.OK);
     }
 
     @PutMapping("/update/{friendshipId}")

@@ -5,9 +5,12 @@ import sport.app.sport_connecting_people.dto.user.request.UserUpdateDto;
 import sport.app.sport_connecting_people.dto.user.response.PaginatedUserProfileDto;
 import sport.app.sport_connecting_people.dto.user.response.PaginatedUserResponseDto;
 import sport.app.sport_connecting_people.dto.user.response.UserProfileDto;
+import sport.app.sport_connecting_people.entity.User;
 import sport.app.sport_connecting_people.security.model.UserPrincipal;
 
 public interface UserService {
+
+    User findUserById(Long userId);
 
     void updateUser(UserUpdateDto dto);
 

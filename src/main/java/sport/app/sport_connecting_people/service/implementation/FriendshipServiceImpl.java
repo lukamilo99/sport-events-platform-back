@@ -17,7 +17,6 @@ import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.FriendshipRepository;
 import sport.app.sport_connecting_people.repository.UserRepository;
 import sport.app.sport_connecting_people.service.specification.FriendshipService;
-import sport.app.sport_connecting_people.service.specification.NotificationService;
 import sport.app.sport_connecting_people.service.specification.PrincipalService;
 
 import java.time.LocalDateTime;
@@ -32,12 +31,10 @@ public class FriendshipServiceImpl implements FriendshipService {
     private FriendshipRepository friendshipRepository;
     private UserRepository userRepository;
     private PrincipalService principalService;
-    private NotificationService notificationService;
     private UserMapper userMapper;
 
-    @Transactional
     @Override
-    public void createFriendship(Long responderId) {
+    public Friendship createFriendship(Long responderId) {
         Long requesterId = principalService.getCurrentUserId();
 
         if (friendshipRepository.existsByRequesterIdAndResponderId(requesterId, responderId)
@@ -55,14 +52,13 @@ public class FriendshipServiceImpl implements FriendshipService {
         friendship.setStatus(FriendshipStatus.PENDING);
         friendshipRepository.save(friendship);
 
-        FriendRequestNotification notification = getFriendshipRequestNotification(friendship);
-        notificationService.saveNotification(notification);
+        return friendship;
     }
 
     @Override
-    public PaginatedUserResponseDto getUserFriends(Pageable pageable) {
+    public PaginatedUserResponseDto getUserFriends(String name, Pageable pageable) {
         Long currentUserId = principalService.getCurrentUserId();
-        Page<Friendship> friendsPage = friendshipRepository.findAllByRequesterIdAndStatusOrResponderIdAndStatus(currentUserId,
+        Page<Friendship> friendsPage = friendshipRepository.findAllByRequesterIdAAndAndStatusOrResponderIdAndStatus(currentUserId,
                 FriendshipStatus.ACCEPTED,
                 currentUserId,
                 FriendshipStatus.ACCEPTED,
@@ -119,17 +115,6 @@ public class FriendshipServiceImpl implements FriendshipService {
         } else {
             return FriendshipStatus.NOT_FRIEND;
         }
-    }
-
-    private FriendRequestNotification getFriendshipRequestNotification(Friendship friendship) {
-        User requester = friendship.getRequester();
-        User responder = friendship.getResponder();
-        FriendRequestNotification notification = new FriendRequestNotification();
-        notification.setMessage(requester.getFirstname() + " " + requester.getLastname() + " has sent you a friend request!");
-        notification.setCreationDate(LocalDateTime.now());
-        notification.setFriendship(friendship);
-        notification.setRecipient(responder);
-        return notification;
     }
 }
 

@@ -22,6 +22,7 @@ public class NotificationServiceImpl implements NotificationService {
     private PrincipalService principalService;
     private NotificationMapper notificationMapper;
 
+    @Override
     public PaginatedNotificationResponseDto getUserNotifications(Pageable pageable) {
         Long userId = principalService.getCurrentUserId();
         Page<Notification> notificationPage = notificationRepository.findByRecipientId(userId, pageable);
@@ -40,13 +41,14 @@ public class NotificationServiceImpl implements NotificationService {
             response.setUnreadNotificationsCount(0L);
         }
         return response;
-
     }
 
-    public void saveNotification(Notification notification) {
+    @Override
+    public void createNotification(Notification notification) {
         notificationRepository.save(notification);
     }
 
+    @Override
     public void deleteUserNotifications(Long userId) {
         notificationRepository.deleteByRecipientId(userId);
     }

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
 
-    Page<Friendship> findAllByRequesterIdAndStatusOrResponderIdAndStatus(Long requesterId, FriendshipStatus status1, Long responderId, FriendshipStatus status2, Pageable pageable);
+    Page<Friendship> findAllByRequesterIdAAndAndStatusOrResponderIdAndStatus(Long requesterId, FriendshipStatus status1, Long responderId, FriendshipStatus status2, Pageable pageable);
 
     Optional<Friendship> findByRequesterIdAndResponderId(Long requesterId, Long responderId);
 

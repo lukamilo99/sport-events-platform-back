@@ -1,6 +1,5 @@
 package sport.app.sport_connecting_people.mapper;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import sport.app.sport_connecting_people.dto.event.request.EventUpsertDto;
 import sport.app.sport_connecting_people.dto.event.response.EventDetailsDto;
@@ -14,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@AllArgsConstructor
 @Component
 public class EventMapper {
 

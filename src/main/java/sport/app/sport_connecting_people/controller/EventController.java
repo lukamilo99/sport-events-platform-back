@@ -12,6 +12,7 @@ import sport.app.sport_connecting_people.dto.event.response.EventDetailsDto;
 import sport.app.sport_connecting_people.dto.event.response.EventDto;
 import sport.app.sport_connecting_people.dto.event.response.PaginatedEventDto;
 import sport.app.sport_connecting_people.dto.event.response.PaginatedMyEventDto;
+import sport.app.sport_connecting_people.service.implementation.facade.UserInteractionFacade;
 import sport.app.sport_connecting_people.service.specification.EventService;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 public class EventController {
 
     private EventService eventService;
+    private UserInteractionFacade userInteractionFacade;
 
     @PostMapping("/create")
     public ResponseEntity<Void> createEvent(@Valid @RequestBody EventUpsertDto dto) {
@@ -60,6 +62,12 @@ public class EventController {
     @PostMapping("/leave/{eventId}")
     public ResponseEntity<Void> leaveEvent(@PathVariable Long eventId) {
         eventService.leaveEvent(eventId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/invite/{eventId}/{recipientId}")
+    public ResponseEntity<Void> inviteToEvent(@PathVariable Long eventId, @PathVariable Long recipientId) {
+        userInteractionFacade.sendEventInvitationRequest(eventId, recipientId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

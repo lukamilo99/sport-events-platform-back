@@ -1,6 +1,7 @@
 package sport.app.sport_connecting_people.dto.notification.response;
 
 import lombok.*;
+import sport.app.sport_connecting_people.entity.enums.NotificationType;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +14,7 @@ public class NotificationResponseDto {
 
     private Long id;
 
-    private String type;
+    private NotificationType type;
 
     private LocalDateTime creationDate;
 

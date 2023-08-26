@@ -12,10 +12,11 @@ import sport.app.sport_connecting_people.dto.user.response.UserProfileDto;
 import sport.app.sport_connecting_people.dto.user.request.UserUpdateDto;
 import sport.app.sport_connecting_people.dto.user.response.UserResponseDto;
 import sport.app.sport_connecting_people.entity.User;
+import sport.app.sport_connecting_people.entity.enums.FriendshipStatus;
+import sport.app.sport_connecting_people.exceptions.user.UserNotFoundException;
 import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.UserRepository;
 import sport.app.sport_connecting_people.security.model.UserPrincipal;
-import sport.app.sport_connecting_people.service.specification.FriendshipService;
 import sport.app.sport_connecting_people.service.specification.PrincipalService;
 import sport.app.sport_connecting_people.service.specification.UserService;
 import sport.app.sport_connecting_people.specification.UserSpecification;
@@ -29,8 +30,13 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private PrincipalService principalService;
-    private FriendshipService friendshipService;
     private UserMapper userMapper;
+
+    @Override
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+    }
 
     @Transactional
     @Override
@@ -67,7 +73,8 @@ public class UserServiceImpl implements UserService {
         User currentUser = principalService.getCurrentUser();
         List<UserResponseDto> userDtos = users.getContent().stream().map(user -> {
             UserResponseDto dto = userMapper.mapToUserResponseDto(user);
-            dto.setStatus(friendshipService.getFriendshipStatus(currentUser.getId(), user.getId()));
+            dto.setStatus(FriendshipStatus.valueOf(userRepository.findFriendshipStatus(currentUser.getId(), user.getId())
+                    .orElse("NOT_FRIEND")));
             return dto;
         }).collect(Collectors.toList());
 

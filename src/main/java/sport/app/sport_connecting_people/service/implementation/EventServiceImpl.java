@@ -36,6 +36,12 @@ public class EventServiceImpl implements EventService {
     private EventMapper eventMapper;
     private UserMapper userMapper;
 
+    @Override
+    public Event findEventById(Long eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
+    }
+
     @Transactional
     @Override
     public void createEvent(EventUpsertDto dto) {

@@ -3,10 +3,13 @@ package sport.app.sport_connecting_people.service.specification;
 import org.springframework.data.domain.Pageable;
 import sport.app.sport_connecting_people.dto.event.request.EventUpsertDto;
 import sport.app.sport_connecting_people.dto.event.response.*;
+import sport.app.sport_connecting_people.entity.Event;
 
 import java.util.List;
 
 public interface EventService {
+
+    Event findEventById(Long eventId);
 
     void createEvent(EventUpsertDto dto);
 
