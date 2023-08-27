@@ -25,9 +25,12 @@ This is a RESTful API and part of a full-stack application ([frontend](https://g
   - **Event Modification:** Event creators have the capability to delete and update events they've organized.
   - **Join & Leave:** Users can join events hosted by others and have the flexibility to leave whenever they wish.
 
-- **Event Discovery**
-  - **Event Search:** Users can browse events and filter them based on criteria such as name, sport type, city, or event date. Additionally, pagination is used to enable easier browsing of search results.
-  - **Event Details:** Interested parties can see event participants, available spots, and the exact location on a map.
+- **Request Management**
+  - **Friendship Requests:** Users can send, receive, and manage friendship requests.
+  - **Event Invitation Requests:** Users can send and receive invitations for sports events. This enables users to invite others to the events they are organizing or get invited by others.
+
+- **Notification Management**
+  - **Request Notifications:** Users receive notifications for friendship and event invitation requests. This helps in keeping users updated about the interactions from other users.
 
 ## Installation Guide
 1. Clone this repository.
