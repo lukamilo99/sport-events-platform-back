@@ -23,7 +23,7 @@ public abstract class Notification {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "recipient")
+    @JoinColumn(name = "recipient_id", referencedColumnName = "id")
     private User recipient;
 
     private LocalDateTime creationDate;

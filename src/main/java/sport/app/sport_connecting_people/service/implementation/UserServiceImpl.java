@@ -12,7 +12,7 @@ import sport.app.sport_connecting_people.dto.user.response.UserProfileDto;
 import sport.app.sport_connecting_people.dto.user.request.UserUpdateDto;
 import sport.app.sport_connecting_people.dto.user.response.UserResponseDto;
 import sport.app.sport_connecting_people.entity.User;
-import sport.app.sport_connecting_people.entity.enums.FriendshipStatus;
+import sport.app.sport_connecting_people.entity.enums.RequestStatus;
 import sport.app.sport_connecting_people.exceptions.user.UserNotFoundException;
 import sport.app.sport_connecting_people.mapper.UserMapper;
 import sport.app.sport_connecting_people.repository.UserRepository;
@@ -73,8 +73,7 @@ public class UserServiceImpl implements UserService {
         User currentUser = principalService.getCurrentUser();
         List<UserResponseDto> userDtos = users.getContent().stream().map(user -> {
             UserResponseDto dto = userMapper.mapToUserResponseDto(user);
-            dto.setStatus(FriendshipStatus.valueOf(userRepository.findFriendshipStatus(currentUser.getId(), user.getId())
-                    .orElse("NOT_FRIEND")));
+            dto.setStatus(userRepository.findFriendshipRequestStatus(currentUser.getId(), user.getId()).orElse(RequestStatus.NOTHING));
             return dto;
         }).collect(Collectors.toList());
 

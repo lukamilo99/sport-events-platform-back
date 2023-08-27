@@ -52,7 +52,7 @@ public class Event {
     private Double coordinatesLon;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "eventCreator", referencedColumnName = "id")
+    @JoinColumn(name = "event_creator_id", referencedColumnName = "id")
     private User eventCreator;
 
     @ManyToMany(fetch = FetchType.LAZY)

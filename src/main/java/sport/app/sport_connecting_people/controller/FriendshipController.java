@@ -16,25 +16,12 @@ import sport.app.sport_connecting_people.service.specification.FriendshipService
 public class FriendshipController {
 
     private FriendshipService friendshipService;
-    private UserInteractionFacade userInteractionFacade;
-
-    @PostMapping("/create/{responderId}")
-    public ResponseEntity<Void> createFriendship(@PathVariable Long responderId) {
-        userInteractionFacade.sendFriendRequest(responderId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
     @GetMapping("/user-friends")
     public ResponseEntity<PaginatedUserResponseDto> getUserFriends(@RequestParam(defaultValue = "0") int page,
                                                                    @RequestParam(required = false) String name) {
         Pageable pageable = PageRequest.of(page, 6);
         return new ResponseEntity<>(friendshipService.getUserFriends(name, pageable), HttpStatus.OK);
-    }
-
-    @PutMapping("/update/{friendshipId}")
-    public ResponseEntity<Void> updateFriendship(@PathVariable Long friendshipId, @RequestParam boolean status) {
-        friendshipService.updateFriendshipStatus(friendshipId, status);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{responderId}")

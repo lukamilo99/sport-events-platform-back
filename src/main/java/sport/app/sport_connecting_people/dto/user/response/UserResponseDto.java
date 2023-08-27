@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sport.app.sport_connecting_people.entity.enums.FriendshipStatus;
+import sport.app.sport_connecting_people.entity.enums.RequestStatus;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,5 +14,5 @@ public class UserResponseDto {
 
     private Long id;
     private String name;
-    private FriendshipStatus status;
+    private RequestStatus status;
 }

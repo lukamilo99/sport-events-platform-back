@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import sport.app.sport_connecting_people.entity.User;
+import sport.app.sport_connecting_people.entity.enums.RequestStatus;
 
 
 import java.util.Optional;
@@ -24,6 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("UPDATE User u SET u.isEnabled = :isEnabled WHERE u.id = :userId")
     int updateUserEnabledStatus(@Param("userId") Long userId, @Param("isEnabled") boolean isEnabled);
 
-    @Query("SELECT f.status FROM Friendship f WHERE f.requester.id = ?1 AND f.responder.id = ?2")
-    Optional<String> findFriendshipStatus(Long userId1, Long userId2);
+    @Query("SELECT r.status FROM Request r WHERE r.sender.id = ?1 AND r.receiver.id = ?2 AND TYPE(r) = 'FRIENDSHIP_REQUEST'")
+    Optional<RequestStatus> findFriendshipRequestStatus(Long userId1, Long userId2);
 }

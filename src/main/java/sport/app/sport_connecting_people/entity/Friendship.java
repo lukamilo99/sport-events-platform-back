@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sport.app.sport_connecting_people.entity.enums.FriendshipStatus;
+
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,13 +21,12 @@ public class Friendship {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "requester", referencedColumnName = "id")
+    @JoinColumn(name = "requester_id", referencedColumnName = "id")
     private User requester;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "responder", referencedColumnName = "id")
+    @JoinColumn(name = "responder_id", referencedColumnName = "id")
     private User responder;
 
-    @Enumerated(EnumType.STRING)
-    private FriendshipStatus status;
+    private LocalDateTime creationDate;
 }
