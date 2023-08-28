@@ -26,13 +26,13 @@ public class UserInteractionController {
 
     @PostMapping("/request/{requestId}/accept")
     public ResponseEntity<Void> acceptRequest(@PathVariable Long requestId) {
-        userInteractionFacade.acceptRequest(requestId, true);
+        userInteractionFacade.acceptRequest(requestId);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/request/{requestId}/decline")
     public ResponseEntity<Void> declineRequest(@PathVariable Long requestId) {
-        userInteractionFacade.declineRequest(requestId, false);
+        userInteractionFacade.declineRequest(requestId);
         return ResponseEntity.ok().build();
     }
 

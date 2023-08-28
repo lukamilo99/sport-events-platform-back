@@ -24,7 +24,4 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Modifying
     @Query("UPDATE User u SET u.isEnabled = :isEnabled WHERE u.id = :userId")
     int updateUserEnabledStatus(@Param("userId") Long userId, @Param("isEnabled") boolean isEnabled);
-
-    @Query("SELECT r.status FROM Request r WHERE r.sender.id = ?1 AND r.receiver.id = ?2 AND TYPE(r) = 'FRIENDSHIP_REQUEST'")
-    Optional<RequestStatus> findFriendshipRequestStatus(Long userId1, Long userId2);
 }

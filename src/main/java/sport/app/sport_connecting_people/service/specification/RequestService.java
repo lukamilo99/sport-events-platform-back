@@ -8,7 +8,7 @@ public interface RequestService {
 
     Request findById(Long requestId);
 
-    Request findFriendshipRequestByRecipientIdAndStatus(Long recipientId, RequestStatus status);
+    Request findFriendshipRequestForIds(Long currentUserId, Long otherUserId);
 
     Request createFriendshipRequest(User sender, User responder);
 

@@ -13,6 +13,7 @@ import sport.app.sport_connecting_people.dto.user.response.PaginatedUserResponse
 import sport.app.sport_connecting_people.dto.user.response.UserProfileDto;
 import sport.app.sport_connecting_people.dto.user.request.UserUpdateDto;
 import sport.app.sport_connecting_people.security.model.UserPrincipal;
+import sport.app.sport_connecting_people.service.implementation.facade.UserRelationFacade;
 import sport.app.sport_connecting_people.service.specification.UserService;
 
 @AllArgsConstructor
@@ -21,6 +22,7 @@ import sport.app.sport_connecting_people.service.specification.UserService;
 public class UserController {
 
     private UserService userService;
+    private UserRelationFacade userRelationFacade;
 
     @PutMapping("/update")
     public ResponseEntity<Void> updateUser(@Valid @RequestBody UserUpdateDto dto) {
@@ -57,7 +59,7 @@ public class UserController {
     public ResponseEntity<PaginatedUserResponseDto> searchUsers(@RequestParam(required = false) String name,
                                                                 @RequestParam(defaultValue = "0") int page) {
         Pageable pageable = PageRequest.of(page, 6);
-        return new ResponseEntity<>(userService.searchUsers(name, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(userRelationFacade.searchUsers(name, pageable), HttpStatus.OK);
     }
 
     @GetMapping("/me")

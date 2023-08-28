@@ -12,7 +12,9 @@ public interface NotificationService {
 
     void createNotificationForRequest(Request request);
 
-    void deleteUserNotifications(Long userId);
-
     void sendNotification(Notification notification);
+
+    void markAsRead(Long requestId);
+
+    Notification findByRequestId(Long requestId);
 }

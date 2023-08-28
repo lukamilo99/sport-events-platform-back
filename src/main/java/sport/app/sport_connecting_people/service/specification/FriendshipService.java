@@ -5,11 +5,17 @@ import sport.app.sport_connecting_people.dto.user.response.PaginatedUserResponse
 import sport.app.sport_connecting_people.entity.Friendship;
 import sport.app.sport_connecting_people.entity.User;
 
+import java.util.Optional;
+
 public interface FriendshipService {
 
     void createFriendship(User requester, User responder);
 
+    void deleteFriendship(Long friendshipId);
+
     PaginatedUserResponseDto getUserFriends(String name, Pageable pageable);
 
-    void deleteFriendship(Long responderId);
+    Friendship findByRequesterAndResponder(User requester, User responder);
+
+    Friendship findById(Long friendshipId);
 }

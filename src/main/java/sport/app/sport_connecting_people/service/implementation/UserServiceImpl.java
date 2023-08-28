@@ -67,19 +67,19 @@ public class UserServiceImpl implements UserService {
     public PaginatedUserResponseDto searchUsers(String name, Pageable pageable) {
         Specification<User> spec = Specification
                 .where(UserSpecification.hasFirstName(name))
-                .or(UserSpecification.hasLastName(name));
-        Page<User> users = userRepository.findAll(spec, pageable);
+                .or(UserSpecification.hasLastName(name))
+                .and(UserSpecification.hasNotId(principalService.getCurrentUserId()));
 
-        User currentUser = principalService.getCurrentUser();
-        List<UserResponseDto> userDtos = users.getContent().stream().map(user -> {
-            UserResponseDto dto = userMapper.mapToUserResponseDto(user);
-            dto.setStatus(userRepository.findFriendshipRequestStatus(currentUser.getId(), user.getId()).orElse(RequestStatus.NOTHING));
-            return dto;
-        }).collect(Collectors.toList());
+        Page<User> users = userRepository.findAll(spec, pageable);
+        List<UserResponseDto> userDtos = users.getContent()
+                .stream()
+                .map(user -> userMapper.mapToUserResponseDto(user))
+                .collect(Collectors.toList());
 
         PaginatedUserResponseDto response = new PaginatedUserResponseDto();
         response.setUsers(userDtos);
         response.setTotalCount(users.getTotalElements());
+
         return response;
     }
 
@@ -87,7 +87,8 @@ public class UserServiceImpl implements UserService {
     public PaginatedUserProfileDto searchUsersDetails(String name, Pageable pageable) {
         Specification<User> spec = Specification
                 .where(UserSpecification.hasFirstName(name))
-                .or(UserSpecification.hasLastName(name));
+                .or(UserSpecification.hasLastName(name))
+                .and(UserSpecification.hasNotId(principalService.getCurrentUserId()));;
 
         Page<User> userPage = userRepository.findAll(spec, pageable);
         List<UserProfileDto> eventDtos = userPage.getContent().stream()

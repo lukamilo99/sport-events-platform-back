@@ -42,43 +42,32 @@ public class UserInteractionFacade {
     }
 
     @Transactional
-    public void cancelRequest(Long recipientId) {
-        Request request = requestService.findFriendshipRequestByRecipientIdAndStatus(recipientId, RequestStatus.PENDING);
+    public void cancelRequest(Long requestId) {
+        Request request = requestService.findById(requestId);
         eventPublisher.publishEvent(new RequestEvent(this, request, RequestEventType.CANCEL_REQUEST));
     }
 
     @Transactional
-    public void acceptRequest(Long requestId, boolean status) {
+    public void acceptRequest(Long requestId) {
         Request request = requestService.findById(requestId);
 
         if (request instanceof FriendshipRequest friendshipRequest) {
-            handleRequestAnswer(friendshipRequest, status);
-            eventPublisher.publishEvent(new RequestEvent(this, request, RequestEventType.FRIENDSHIP_REQUEST_ACCEPT));
+            request.setStatus(RequestStatus.ACCEPTED);
+            eventPublisher.publishEvent(new RequestEvent(this, friendshipRequest, RequestEventType.FRIENDSHIP_REQUEST_ACCEPT));
         } else if (request instanceof EventInvitationRequest eventInvitationRequest) {
-            handleRequestAnswer(eventInvitationRequest, status);
-            eventPublisher.publishEvent(new RequestEvent(this, request, RequestEventType.EVENT_INVITATION_REQUEST_ACCEPT));
+            request.setStatus(RequestStatus.ACCEPTED);
+            eventPublisher.publishEvent(new RequestEvent(this, eventInvitationRequest, RequestEventType.EVENT_INVITATION_REQUEST_ACCEPT));
         }
     }
 
     @Transactional
-    public void declineRequest(Long requestId, boolean status) {
+    public void declineRequest(Long requestId) {
         Request request = requestService.findById(requestId);
 
         if (request instanceof FriendshipRequest friendshipRequest) {
-            handleRequestAnswer(friendshipRequest, status);
-            eventPublisher.publishEvent(new RequestEvent(this, request, RequestEventType.FRIENDSHIP_REQUEST_DECLINE));
+            eventPublisher.publishEvent(new RequestEvent(this, friendshipRequest, RequestEventType.FRIENDSHIP_REQUEST_DECLINE));
         } else if (request instanceof EventInvitationRequest eventInvitationRequest) {
-            handleRequestAnswer(eventInvitationRequest, status);
-            eventPublisher.publishEvent(new RequestEvent(this, request, RequestEventType.EVENT_INVITATION_REQUEST_DECLINE));
-        }
-    }
-
-    private void handleRequestAnswer(Request request, boolean status) {
-        if(status) {
-            request.setStatus(RequestStatus.ACCEPTED);
-        }
-        else {
-            request.setStatus(RequestStatus.DECLINED);
+            eventPublisher.publishEvent(new RequestEvent(this, eventInvitationRequest, RequestEventType.EVENT_INVITATION_REQUEST_DECLINE));
         }
     }
 }

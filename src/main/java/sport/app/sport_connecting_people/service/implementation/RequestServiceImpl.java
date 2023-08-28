@@ -26,9 +26,9 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request findFriendshipRequestByRecipientIdAndStatus(Long recipientId, RequestStatus status) {
-        return requestRepository.findFriendshipRequestByReceiverIdAndStatus(recipientId, status)
-                .orElseThrow(() -> new RequestNotFoundException("Request not found with id"));
+    public Request findFriendshipRequestForIds(Long currentUserId, Long otherUserId) {
+        return requestRepository.findFriendshipRequestForIds(currentUserId, otherUserId)
+                .orElse(null);
     }
 
     @Override

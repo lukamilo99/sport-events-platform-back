@@ -11,6 +11,7 @@ import sport.app.sport_connecting_people.dto.event.response.*;
 import sport.app.sport_connecting_people.dto.user.response.UserResponseDto;
 import sport.app.sport_connecting_people.entity.Event;
 import sport.app.sport_connecting_people.entity.User;
+import sport.app.sport_connecting_people.exceptions.event.AlreadyParticipateEventException;
 import sport.app.sport_connecting_people.exceptions.event.EventFullException;
 import sport.app.sport_connecting_people.exceptions.user.AccessDeniedException;
 import sport.app.sport_connecting_people.exceptions.event.EventNotFoundException;
@@ -90,6 +91,9 @@ public class EventServiceImpl implements EventService {
 
         if(isEventFull(event)) {
             throw new EventFullException("Event " + event.getName() + " is full");
+        }
+        else if(isAlreadyIn(event, user)) {
+            throw new AlreadyParticipateEventException("Already in event " + event.getName());
         }
         else {
             event.addParticipant(user);
@@ -216,5 +220,9 @@ public class EventServiceImpl implements EventService {
 
     private int getAvailableSpots(Event event) {
         return event.getCapacity() - event.getParticipants().size();
+    }
+
+    private boolean isAlreadyIn(Event event, User user) {
+        return event.getParticipants().contains(user);
     }
 }
