@@ -19,11 +19,14 @@ This is a RESTful API and part of a full-stack application ([frontend](https://g
   - **Registration & Login:** Users can register manually or through their Google accounts.
   - **Profile Editing:** Users who have registered can update their name, surname, and email address(only manually registered users).
   - **Role-Based Access Control:** The platform uses roles to determine user permissions, restricting actions based on the user's role.
+ 
+- **Friendship Management**
+  - **Add Friends:** Users can send and receive friend requests to connect with others on the platform.
 
 - **Event Management**
   - **Event Creation:** Users can craft sports events and decide the location through address autocomplete or by marking a spot directly on the interactive map.
   - **Event Modification:** Event creators have the capability to delete and update events they've organized.
-  - **Join & Leave:** Users can join events hosted by others and have the flexibility to leave whenever they wish.
+  - **Join, Invite, Leave:** Users can join events hosted by others or invite friends to them and have the flexibility to leave whenever they wish.
 
 - **Request Management**
   - **Friendship Requests:** Users can send, receive, and manage friendship requests.
